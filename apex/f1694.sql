@@ -20,13 +20,13 @@ wwv_flow_api.import_begin (
 );
 end;
 /
- 
+
 prompt APPLICATION 1694 - APEX PWA
 --
 -- Application Export:
 --   Application:     1694
 --   Name:            APEX PWA
---   Date and Time:   11:20 Monday June 11, 2018
+--   Date and Time:   11:56 Monday June 11, 2018
 --   Exported By:     DEV
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -37,7 +37,7 @@ prompt APPLICATION 1694 - APEX PWA
 -- Application Statistics:
 --   Pages:                      3
 --     Items:                   33
---     Processes:                5
+--     Processes:                4
 --     Regions:                 12
 --     Buttons:                  9
 --     Dynamic Actions:          1
@@ -126,7 +126,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'VMORNEAU'
-,p_last_upd_yyyymmddhh24miss=>'20180610133738'
+,p_last_upd_yyyymmddhh24miss=>'20180611115546'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>2054
 ,p_ui_type_name => null
@@ -15512,7 +15512,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_rejoin_existing_sessions=>'Y'
 ,p_last_updated_by=>'VMORNEAU'
-,p_last_upd_yyyymmddhh24miss=>'20180610133640'
+,p_last_upd_yyyymmddhh24miss=>'20180611115546'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(6277331270893496263)
@@ -15944,21 +15944,6 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Get Username Cookie'
 ,p_process_sql_clob=>':P1_USERNAME := apex_authentication.get_login_username_cookie;'
-);
-wwv_flow_api.create_page_process(
- p_id=>wwv_flow_api.id(6261669384395240500)
-,p_process_sequence=>10
-,p_process_point=>'ON_DEMAND'
-,p_process_type=>'NATIVE_PLSQL'
-,p_process_name=>'something'
-,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'begin',
-'  apex_json.open_object;',
-'  apex_json.write(''hello'', apex_application.g_x01);',
-'  apex_json.close_object;',
-'end;'))
-,p_error_display_location=>'INLINE_IN_NOTIFICATION'
-,p_process_when_type=>'NEVER'
 );
 end;
 /
