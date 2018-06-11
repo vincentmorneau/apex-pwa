@@ -12,3 +12,4 @@ npm-debug.log*
 # Others
 .build-oracle.json
 app.export.sql
+firebase.json
