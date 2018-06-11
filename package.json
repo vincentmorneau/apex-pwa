@@ -1,0 +1,11 @@
+{
+  "name": "apex-pwa",
+  "author": "Vincent Morneau",
+  "version": "1.0.0",
+  "description": "An example of APEX as a Progressive Web Application",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vincentmorneau/apex-pwa.git"
+  }
+}

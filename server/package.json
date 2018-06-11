@@ -1,0 +1,13 @@
+{
+	"name": "apex-pwa-push-server",
+	"author": "Vincent Morneau",
+	"version": "1.0.0",
+	"description": "Simple server to push notifications",
+	"license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "firebase-admin": "^5.12.1",
+    "web-push": "^3.3.1"
+  }
+}

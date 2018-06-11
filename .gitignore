@@ -1,0 +1,17 @@
+# Folders
+node_modules
+bower_components
+apex
+dist
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Mac
+.DS_Store
+
+# Others
+.build-oracle.json
+app.export.sql
