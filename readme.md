@@ -22,3 +22,5 @@ This APEX application is a Progressive Web App and demoes the following features
 ---
 
 More more info, watch the recording of my #Kscope18 session on PWAs.
+
+Code is well documented, so I recommend reading through the code too.
