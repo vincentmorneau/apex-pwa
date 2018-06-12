@@ -1,5 +1,13 @@
 # APEX as a PWA
 
+This page is going to be updated in the following weeks to improve documentation.
+
+The code is fairly commented, so I recommend reading through the `src` folder too.
+
+More more info, watch the recording of my #Kscope18 session on PWAs.
+
+---
+
 This APEX application is a Progressive Web App and demoes the following features:
 1. Installing the app on a phone
 2. Making the app available offline
@@ -18,9 +26,3 @@ This APEX application is a Progressive Web App and demoes the following features
 	- replace `CHANGE ME #1` with your file from step 2.
 	- replace `CHANGE ME #2` with your vapid information (email, public key and private key) from Firebase.
 	- replace `CHANGE ME #3` with your Firebase database URL.
-
----
-
-More more info, watch the recording of my #Kscope18 session on PWAs.
-
-Code is well documented, so I recommend reading through the code too.
