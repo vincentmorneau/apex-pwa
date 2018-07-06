@@ -1,28 +1,33 @@
 # APEX as a PWA
+A complete guide for turning an APEX application into a Progressive Web App.
 
-This page is going to be updated in the following weeks to improve documentation.
-
-The code is fairly commented, so I recommend reading through the `src` folder too.
-
-More more info, watch the recording of my #Kscope18 session on PWAs.
-
----
-
-This APEX application is a Progressive Web App and demoes the following features:
-1. Installing the app on a phone
-2. Making the app available offline
-3. Storing requests for when user gets back online
+### Covered features
+1. Installing the APEX app on a mobile device
+2. Making the APEX app available offline
+3. Syncing offline requests when getting back online
 4. Sending push notifications
 
-#### Using this demo
+### Documentation
+* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
+* [Part 2: Pre-requisites and APEX Setup](./doc/part2.md)
+* [Part 3: Installing an APEX app into a mobile device](./doc/part3.md)
+* [Part 4: Using an APEX App Offline](./doc/part4.md)
+* [Part 5: Handling Background Sync](./doc/part5.md)
+* [Part 6: Sending Push Notifications](./doc/part6.md)
+* [Part 7: Tips When Developing a PWA](./doc/part7.md)
+* [Part 8: Final Thoughts](./doc/part8.md)
 
-1. Install the app `f1694.sql`
-2. Put `src/manifest.json` and `src/sw.js` on your ORDS `doc_root` folder. Can be found as part of your standalone.properties ORDS file: ![banner](/doc/doc_root.png)
-
-#### Things you need to replace in this repository:
-1. `src/manifest.json`: replace the `start_url` value with your own application URL
-2. `server/apex-pwa-firebase.json`: replace this file with your Firebase project export file
-3. `server/server.js`
-	- replace `CHANGE ME #1` with your file from step 2.
-	- replace `CHANGE ME #2` with your vapid information (email, public key and private key) from Firebase.
-	- replace `CHANGE ME #3` with your Firebase database URL.
+### Using this demo
+1. Import the demo [app](/apex/f1694.sql) on your workpace
+2. Meet the requirements listed in [Part 2](./doc/part2.md)
+3. Put the following files on your ORDS `doc_root` folder
+    * `src/manifest.json`
+    * `src/sw.js`
+4. Replace the following values in these files
+    * `src/manifest.json`
+        * Replace the `start_url` value with your own application URL
+    * `server/firebase.json`
+        * Add your Firebase account export file, as instructed in [Part 6](./doc/part6.md)
+    * `server/server.js`
+        * Replace `CHANGE_ME_1` with your vapid information from Firebase (email, public key and private key)
+        * Replace `CHANGE_ME_2` with your Firebase database URL

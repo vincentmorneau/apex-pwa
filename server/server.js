@@ -1,7 +1,6 @@
 var admin = require('firebase-admin');
 var webpush = require('web-push');
 
-// CHANGE ME #1
 // THE FOLLOWING JSON FILE REFERENCE WITH YOUR FILEBASE EXPORT FILE
 var serviceAccount = require("./firebase.json");
 
@@ -14,7 +13,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-// CHANGE ME #2
+// CHANGE_ME_1
 // THE FOLLOWING WITH YOUR EMAIL, PUBLIC KEY AND PRIVATE KEY
 webpush.setVapidDetails(
 	'mailto:vincent.morneau@gmail.com',
@@ -22,7 +21,7 @@ webpush.setVapidDetails(
 	'2yztumiibMCOxZtKny2l4lZ-pXj01151vlV5BcWJDmY'
 );
 
-// CHANGE ME #3
+// CHANGE_ME_2
 // THE FOLLOWING WITH YOUR FIREBASE DATABASE URL
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
