@@ -2,7 +2,7 @@
 
 > This blog post series intends to cover everything there is to know about turning an APEX application into a Progressive Web App.
 >
-> This documentation is also available [on my blog](http://vmorneau.me/apex-pwa-part1).
+> This documentation is also available [on my blog](https://vmorneau.me/apex-pwa-part1).
 
 ## APEX as a PWA: The Complete Guide
 

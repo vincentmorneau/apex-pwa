@@ -1,7 +1,7 @@
 {
   "name": "APEX as a Progressive Web App",
   "short_name": "APEX PWA",
-  "start_url": "https://320b20c1.ngrok.io/ords/f?p=1694:1",
+  "start_url": "http://localhost:31810/ords/f?p=1694:1",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#fff",

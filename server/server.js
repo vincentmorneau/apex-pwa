@@ -1,7 +1,7 @@
 var admin = require('firebase-admin');
 var webpush = require('web-push');
 
-// THE FOLLOWING JSON FILE REFERENCE WITH YOUR FILEBASE EXPORT FILE
+// THE FOLLOWING FILE REFERENCE IS YOUR FIREBASE SERVICE ACCOUNT FILE
 var serviceAccount = require("./firebase.json");
 
 var express = require("express");

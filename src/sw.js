@@ -1,3 +1,6 @@
+// THESE FILES (sw.js and manifest.json) HAVE TO BE SERVED FROM ORDS DOC ROOT. MORE INFO:
+// https://github.com/vincentmorneau/apex-pwa/blob/master/doc/part2.md
+
 const cacheStaticName = 'static-cache';
 const cacheStaticPages = [1];
 const cacheStaticPagesUrl = [];
@@ -104,7 +107,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('sync', event => {
 	console.log('[SW] Syncing', event);
-	// Reexecute the call stack
+	// Re-execute the call stack
 });
 
 self.addEventListener('push', event => {

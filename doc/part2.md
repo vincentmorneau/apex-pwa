@@ -2,7 +2,7 @@
 
 > This blog post series intends to cover everything there is to know about turning an APEX application into a Progressive Web App.
 >
-> This documentation is also available [on my blog](http://vmorneau.me/apex-pwa-part2).
+> This documentation is also available [on my blog](https://vmorneau.me/apex-pwa-part2).
 
 ## APEX as a PWA: The Complete Guide
 
@@ -81,7 +81,7 @@ The browser handles these two files differently than regular JavaScript and JSON
 
 ![Origin Errors](./part2-origin.png)
 
-### ORDS Doc Root
+### Using ORDS Standalone
 
 On your ORDS instance, locate your `standalone.properties` file. Example:
 
@@ -94,6 +94,12 @@ The content of this file should look like:
 ![ORDS Doc Root](./part2-doc-root.png)
 
 The value next to `standalone.doc.root` is the location where we need to put `sw.js` and `manifest.json`. More on the content of these two files in [Part 4](./part4.md) and [Part 5](./part5.md).
+
+### Using Glassfish
+
+On Glassfish, we want to store our files in `<domain path>/docroot`.
+
+An example would be: `/opt/glassfish4/glassfish/domains/domain18/docroot`.
 
 ## Development Tips
 
@@ -111,11 +117,13 @@ This tool actually gives a score to other areas of web development, such as Acce
 
 ### Tip 2: Dealing with the Cache
 
-TODO
+As you are adding new JavaScript to your PWA, you might want to know about:
 
-![Chrome Disable Cache](./part2-tip2-cache.png)
+1. Disabling the cache in your browser. By keeping the cache enabled while you are pushing new code, you will never get to see your changes. The cache mechanisms we will cover in [Part 5: Using an APEX App Offline](./doc/part5.md) makes sense for production environments.
+  ![Chrome Disable Cache](./part2-tip2-cache.png)
 
-![Chrome Simulate Offline](./part2-tip2-offline.png)
+2. Simulating going offline to test your app without connectivity. You can also turn off your Wi-Fi.
+  ![Chrome Simulate Offline](./part2-tip2-offline.png)
 
 ### Tip 3: Debugging from Mobile
 
