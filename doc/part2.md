@@ -9,7 +9,7 @@
 - [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
 - **Part 2: Setup and Development Tips**
 - [Part 3: JavaScript Recap](./doc/part3.md)
-- [Part 4: Installing an APEX app into a mobile device](./doc/part4.md)
+- [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
 - [Part 5: Using an APEX App Offline](./doc/part5.md)
 - [Part 6: Handling Background Sync](./doc/part6.md)
 - [Part 7: Sending Push Notifications](./doc/part7.md)
@@ -143,6 +143,6 @@ If it’s connected properly, should should your mobile device there, and it wil
 
 ---
 
-At this point, we have fully established the ground work for developing a PWA. Before diving into the PWA features, let's review some important JavaScript concepts in [Part 3: JavaScript Recap](./doc/part3.md). If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX app into a mobile device](./doc/part4.md), where we will tackle the first PWA feature.
+At this point, we have fully established the ground work for developing a PWA. Before diving into the PWA features, let's review some important JavaScript concepts in [Part 3: JavaScript Recap](./doc/part3.md). If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

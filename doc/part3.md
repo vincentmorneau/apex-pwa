@@ -1,6 +1,6 @@
 # Part 3: JavaScript Recap
 
-If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX app into a mobile device](./doc/part4.md), where we will tackle the first PWA feature.
+If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
 
 > This blog post series intends to cover everything there is to know about turning an APEX application into a Progressive Web App.
 >
@@ -11,7 +11,7 @@ If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, h
 - [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
 - [Part 2: Setup and Development Tips](./doc/part2.md)
 - **Part 3: JavaScript Recap**
-- [Part 4: Installing an APEX app into a mobile device](./doc/part4.md)
+- [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
 - [Part 5: Using an APEX App Offline](./doc/part5.md)
 - [Part 6: Handling Background Sync](./doc/part6.md)
 - [Part 7: Sending Push Notifications](./doc/part7.md)
@@ -23,6 +23,7 @@ If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, h
 - [Asynchronous JavaScript](#asynchronous-javascript)
 - [Promises](#promises)
 - [Async / Await](#async-await)
+- [Namespaces](#namespaces)
 
 ---
 
@@ -144,7 +145,7 @@ Async & Await introduces a cleaner way to deal with promises. Let’s turn the e
 async function something(param1) { // *1
   return apex.server.process(
     "process_name", {
-      x01: param1  
+      x01: param1
     } );
 }
 
@@ -164,12 +165,42 @@ Observations:
 
 **The goods:** Using Async / Await goes back to the root of writing simple synchronous code, while benefiting from the asynchronous & promises perks.
 
-**The bads:** Nothing that I can think of yet.
+**The bads:** Nothing that I can think of (yet).
 
 For more info, I wrote a [blog post](https://vmorneau.me/javascript-async-await/) just on Async / Await in APEX.
 
+## Namespaces
+
+Namespaces are used to cut JavaScript into smaller modules, giving context to functions. It's the equivalent of PL/SQL packages.
+
+In this guide, all the code is using the following namespace structure:
+
+```javascript
+/**
+* @namespace pwa
+**/
+var pwa = pwa || {};
+
+/**
+* @module app
+**/
+pwa.app = {
+  /**
+  * @function init
+  * @example pwa.app.init();
+  **/
+  init: function () {
+    // Insert JavaScript here
+  }
+};
+```
+
+To call the `init` function above, we would have to use `pwa.app.init();`.
+
+For more info, I wrote a [blog post](https://vmorneau.me/avoid-javascript-mess/#tip2modularizeyourjavascript) just on JavaScript namespaces in APEX.
+
 ---
 
-That should cover the JavaScript techniques we'll be using all over this guide. Let's head to [Part 4: Installing an APEX app into a mobile device](./doc/part4.md), where we will tackle the first PWA feature.
+That should cover the JavaScript techniques we'll be using all over this guide. Let's head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_
