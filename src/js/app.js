@@ -1,10 +1,26 @@
 /**
  * @global variables
  **/
+
+// This object is our service worker
 var apexServiceWorker = null;
+
+// This object stores a flag to determine if the user has subscribed to notifications or not
 var hasSubscribedNotifications = false;
+
+// This object stores the installation prompt event
 var installPrompt;
+
+// Array of offline tasks. To be executed when connectivity comes back.
 var offlineTasks;
+
+// Public key from Firebase
+// CHANGE THIS VALUE
+var firebaseVapidPublicKey = 'BOFoGrYiN1P70-UMcQ9vbfCJl9x5MXfxqCBbBqOVvim_s63i9xpM9P0PwqHvfNAs2D1rKYFOlMXhD3_Rtuybl2o';
+
+// REST endpoint where we store requests for push notifications
+// CHANGE THIS VALUE
+var firebaseNotificationEndpoint = 'https: //apex-pwa.firebaseio.com/notifications.json';
 
 /**
  * @namespace pwa
@@ -271,20 +287,15 @@ pwa.notification = {
 				if (result === 'granted') {
 					apex.debug.log('Notification permission granted!');
 
-					// Public key from Firebase, change it to yours
-					var vapidPublicKey = 'BOFoGrYiN1P70-UMcQ9vbfCJl9x5MXfxqCBbBqOVvim_s63i9xpM9P0PwqHvfNAs2D1rKYFOlMXhD3_Rtuybl2o';
-					// Convert the public key
-					var convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
-
 					// Subscribe to the notification
 					apexServiceWorker.pushManager.subscribe({
 							userVisibleOnly: true,
-							applicationServerKey: convertedVapidPublicKey
+							applicationServerKey: urlBase64ToUint8Array(firebaseVapidPublicKey)
 						})
 						.then(function (notification) {
 							// POST the notification subscription to Firebase
 							// notification.json below could be anything
-							return fetch('https://apex-pwa.firebaseio.com/notifications.json', {
+							return fetch(firebaseNotificationEndpoint, {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json',
