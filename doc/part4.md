@@ -18,9 +18,8 @@
 ## Part 4: Table of Content
 
 - [Characteristics](#characteristics)
-- [manifest.json](#manifest-json)
-- [Referencing manifest.json in APEX](#referencing-manifest-json-in-apex)
-- [Understanding Installation Criteria](#understanding-installation-criteria)
+- [Architecture](#Architecture)
+- [Installation Criteria](#understanding-installation-criteria)
 - [Installation Prompt](#installation-prompt)
 - [Using the Installed App](#using-the-installed-app)
 
@@ -30,7 +29,7 @@
 
 Installing an APEX app on a mobile device is likely the easiest part of building a PWA. It's also a very quick win towards enhancing the mobile experience, because having an APEX application sitting on a mobile device home screen will increase user engagement substantially.
 
-**It's always easier to reach for an icon than reaching for a browser bookmark.**
+It's always easier to reach for an icon than reaching for a browser bookmark.
 
 We are **not** adding our APEX application to the App Store or Google play. You can use [Cordova](https://cordova.apache.org/) to build an hybrid app like that. A PWA offers an installation button within the app itself. When clicked, the PWA proceeds to install itself on the device, and the button disappears as it's no longer necessary.
 
@@ -43,23 +42,20 @@ Observations:
 - User clicks on a button `Install this app` in an APEX application
 - Confirmation window appears, asking to add this app to the home screen
 - User clicks "Add to Home Screen"
-- The PWA proceeds to add an icon to the home screen
+- The PWA proceeds to install itself and adds an icon to the home screen
 - User clicks the icon on the home screen
 - Splash screen appears, like a native app
 - APEX application opens in full screen
 
-What we will be doing:
+## Architecture
 
-- Create the architecture to support installation: the `manifest.json` file
-- Add a button to an APEX app called `Install this app` which executes JavaScript code
-- Add JavaScript code that triggers the installation process
-- Relaunch the app using the new icon
+What we need is to create a special file called `manifest.json`. It **has** to be called `manifest.json` for the browser to recognize the purpose of this file properly.
 
-Then we will have a fully functional and full screen APEX app.
+As indicated in [Part 2](./part2.md), the `manifest.json` file must be located at the root level of the APEX server. Example: `https://localhost:31810/manifest.json`.
 
-## manifest.json
+### `manifest.json`
 
-What we need is to store a special file on our server called `manifest.json`. It HAS to be called that for the browser to recognize the purpose of this file.
+Here's an example of a typical `manifest.json` file, [as shown here](https://github.com/vincentmorneau/apex-pwa/blob/master/src/manifest.json).
 
 ```json
 {
@@ -119,88 +115,114 @@ What we need is to store a special file on our server called `manifest.json`. It
 }
 ```
 
-The manifest.json has to contains these properties:
+Property | Description
+-- | --
+short_name | The name of your application, as shown on the home screen icon
+name | The name of your application, as shown on the splash screen
+start_url | The URL of your application
+display | Controls the UI of your PWA. Options are: `fullscreen`, `standalone`, `minimal-ui`, `browser`. [More info here](https://developers.google.com/web/fundamentals/web-app-manifest/#display)
+orientation | Controls the orientation of your PWA. Options are: `any`, `natural`, `landscape`, `landscape-primary`, `landscape-secondary`, `portrait`, `portrait-primary`, `portrait-secondary`
+background_color | Controls the background color of your PWA splash screen
+theme_color | Controls the color of the mobile task bar while navigating your application (Android)
+description | When opening a PWA, the description is shown during the splash screen
+dir | Controls the direction of your PWA. Options are : `ltr`, `rtl`
+lang | Specifies the `name` and `short_name`. Example: `en-US`
+gcm_sender_id | Used to subscribe to push notifications. _This is a hard coded value. Do not change._
+icons | List of icons for your PWA, depending on the context
 
-short_name: name of your app on your home screen
-Name: full name of your app, which shows briefly on the splash screen when the app is loading
-Icons: list of icons for your app, in different sizes. Useful to support most device sizes.
-Display: very important property. There are many options you can read about, but the most interesting one to me is standalone, which opens your application in full screen. Think about that for a second, you`re running a web app in full screen, without seeing the URL bar or anything. That itself is just amazing
-Orientation: is what you can expect. You can lock your app to be in a certain orientation, wether it`s portrait or landscape.
-Background color and theme color are nice addons to your manifest which allows you to pick the color of your mobile device`s notification bar and the splash screen background color.
+### Referencing `manifest.json` in APEX
 
-## Referencing manifest.json in APEX
+When `manifest.json` is completed and uploaded to the root of the APEX server, we still have to reference it in APEX.
 
-When the manifest.json file is completed, we have to reference it in APEX.
+The following tip is some kind of a hack. In the APEX _Shared Components_ under _User Interface Attributes_, there is a section called _Favicon HTML_. The purpose of this field is to inject the different app icons into the `<head></head>` section of an HTML page.
 
-What I'm about to show is a a funny hack.
+Coincidentally, `manifest.json` also needs to go in the `<head></head>` section, so we'll leverage the _Favicon_ field to reference our file, even if it's not an icon:
 
 ![Referencing manifest.json](./part4-referencing.png)
 
-In the APEX shared components, under User Interface attributes, there is a section called Favicon HTML. The purpose of this is to inject the different app icons, like the one you see
+### Adding an "Install" Button to an APEX App
 
-1- here
+To install an APEX application _from the APEX application itself_, we need an install button somewhere. I find that having this button on the navigation bar makes sense, it can be placed anywhere.
 
-The icons are injected into the HEAD section of an HTML page. The manifest.json needs to go in the HEAD section too, so we'll include the reference here, even if it's not an icon.
+![Navigation Bar](./part4-navigation-bar.png)
 
-## Adding an "Install" button to an APEX app
+This button has to do two things:
 
-TODO
+1. When clicked, invoke a JavaScript function to start the installation code. Example: `pwa.install();`. _More on this later._
+2. Has a class so we can control the display of the button (hide and show). Example `pwa-install-btn`:
 
-## Understanding Installation Criteria
+![Install Button Details](./part4-install-button.png)
 
-Because APEX produces web apps, the browser will be the gateway for installing the APEX application for the first time.
+## Installation Criteria
 
-First the browser has to recognize a few criteria.
+Before a PWA is eligible to install itself locally on a device, the browser has to recognize a few criteria:
 
-- Not already installed
-  The web app is not already installed
-- User engagement
-  Meets a user engagement heuristic (currently, the user has interacted with the domain for at least 30 seconds)
-- Web app manifest
-  Includes a web app manifest that includes: name, icons, start_url, display must be full screen
-- Security
-  Served over HTTPS (required for service workers)
-- Service worker
-  Has registered a service worker with a fetch event handler
+Criteria | Description
+--|--
+Not already installed | The web app is not already installed
+User engagement | Meets a user engagement heuristic (currently, the user has interacted with the domain for at least 30 seconds)
+Web app manifest | Includes a web app manifest that includes: name, icons, start_url, display must be full screen
+Security | Served over HTTPS (required for service workers)
+Service worker | Has registered a service worker with a fetch event handler
 
 Source: [Google](https://developers.google.com/web/fundamentals/app-install-banners/)
 
 ## Installation Prompt
 
-So here's the real deal.
+When the criteria above are met, the browser will trigger an event called `beforeinstallprompt` which will automatically launch the installation prompt. This can happen very fast (within 30 seconds of navigating the app), so I think it's better to execute the `beforeinstallprompt` event on a button click rather than spamming the user.
+
+To store the event and execute the installation later, we will use this technique:
 
 ```javascript
+// Global variable used to store the beforeinstallprompt event
 var installPrompt;
 
-// Event will be triggered after criteria are met
-window.addEventListener('beforeinstallprompt', function(event) {
-  installPrompt = event;
+// This event will be triggered after installation criteria are met
+window.addEventListener('beforeinstallprompt', function (event) {
+  // Stop the automatic installation prompt
+  event.preventDefault();
+  // Store the event in a global variable so it can be triggered later
+  installPrompt = event;
+  // Controls the display (hide and show) of the PWA buttons
+  pwa.ui.refresh();
 });
 
-// Show the prompt
-installPrompt.prompt();
-// Wait for the user to respond to the prompt
-installPrompt.userChoice
-  .then(function(choiceResult) {
-    console.log('User ' + choiceResult.outcome);
-  });
-
+// This event will be triggered after the app is installed
+window.addEventListener('appinstalled', function (event) {
+  apex.debug.log('App was installed', event);
+});
 ```
 
-1. Declare a global variable to store the install prompt
-2. A event called `beforeinstallprompt` will be triggered when the user has met the install criteria
-3. What we want to do is store the prompt request
-4. Prompt the installation on a button click, like in the demo
-5. See if user has accepted or rejected
+The code above stores the installation event and makes the installation button appear in the navigation bar. As indicated earlier, the installation button invokes `pwa.install`, which is executes the following code:
 
-When the user accepts, the app will be added to the mobile device`s home screen, and it will launch in full screen.
+```javascript
+pwa.install = function() {
+  // Show the installation prompt, using the global variable previously set
+  installPrompt.prompt();
+  // Wait for the user to respond to the prompt
+  installPrompt.userChoice
+    .then(function(choiceResult) {
+      apex.debug.log('User ' + choiceResult.outcome + ' to install the app');
+      // Reset the install prompt
+      installPrompt = null;
+      // Hide the install button
+      pwa.init.ui();
+    });
+};
+```
+
+After the user accepts the installation prompt, the app will be added to the device's home screen.
 
 ## Using the Installed App
 
-TODO
+Clicking on the new icon will now launch a separate browser instance. Depending on the `display` value of the `manifest.json`, it is possible to hide the browser UI. For instance, `standalone` mode hides any standard browser UI elements like the URL bar, previous/next buttons, etc.
+
+Opening the PWA will display a beautiful splash screen while the application is loading, from which you have total control with the rest of the `manifest.json` properties.
+
+After the app has been installed, the button will disappear.
 
 ---
 
-With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./doc/part5.md) to start learning about Service Workers, which are the driving force of PWAs.
+With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./doc/part5.md) to start learning about _Service Workers_, which are the driving force of PWAs.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

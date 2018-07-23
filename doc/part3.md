@@ -108,7 +108,7 @@ A promise will remain _Pending_ until the code has finished executing. When it d
 Let’s take `apex.server.process` as an example because it returns a promise:
 
 ```javascript
-var something = function (param1) { // *1
+var something = function (param1) { // (1)
   return apex.server.process(
     "process_name", {
       x01: param1
@@ -116,10 +116,10 @@ var something = function (param1) { // *1
   );
 };
 
-something(1) // *2
-  .then(function (data) { // *3
+something(1) // (2)
+  .then(function (data) { // (3)
     console.log("something is resolved:", data);
-  }, function (err) { // *4
+  }, function (err) { // (4)
     console.error("something is rejected:", err);
   });
 ```
@@ -142,7 +142,7 @@ For more info, I wrote a [blog post](https://vmorneau.me/javascript-promises-in-
 Async & Await introduces a cleaner way to deal with promises. Let’s turn the example from above into using Async & Await:
 
 ```javascript
-async function something(param1) { // *1
+async function something(param1) { // (1)
   return apex.server.process(
     "process_name", {
       x01: param1
@@ -150,9 +150,9 @@ async function something(param1) { // *1
 }
 
 try {
-  var result = await something(1); // *2
+  var result = await something(1); // (2)
   console.log('something', result);
-} catch (err) { // *3
+} catch (err) { // (3)
   console.error(err);
 }
 ```
