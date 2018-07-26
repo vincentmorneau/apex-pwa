@@ -6,25 +6,25 @@
 
 ## APEX as a PWA: The Complete Guide
 
-- [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
-- **Part 2: Setup and Development Tips**
-- [Part 3: JavaScript Recap](./doc/part3.md)
-- [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-- [Part 5: Using an APEX App Offline](./doc/part5.md)
-- [Part 6: Handling Background Sync](./doc/part6.md)
-- [Part 7: Sending Push Notifications](./doc/part7.md)
-- [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
+* **Part 2: Setup and Development Tips**
+* [Part 3: JavaScript Recap](./doc/part3.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
+* [Part 5: Using an APEX App Offline](./doc/part5.md)
+* [Part 6: Handling Background Sync](./doc/part6.md)
+* [Part 7: Sending Push Notifications](./doc/part7.md)
+* [Part 8: Final Thoughts](./doc/part8.md)
 
 ## Part 2: Table of Content
 
-- [Setup](#setup)
-  - [Serving Files From Shared Components](#serving-files-from-shared-components)
-  - [Serving Files From the Root](#serving-files-from-the-root)
-  - [ORDS Doc Root](#ords-doc-root)
-- [Development Tips](#development-tips)
-  - [Tip 1: Audit PWA Features](#tip-1-audit-pwa-features)
-  - [Tip 2: Dealing with the Cache](#tip-2-dealing-with-the-cache)
-  - [Tip 3: Debugging from Mobile](#tip-3-debugging-from-mobile)
+* [Setup](#setup)
+  * [Serving Files From Shared Components](#serving-files-from-shared-components)
+  * [Serving Files From the Root](#serving-files-from-the-root)
+  * [ORDS Doc Root](#ords-doc-root)
+* [Development Tips](#development-tips)
+  * [Tip 1: Audit PWA Features](#tip-1-audit-pwa-features)
+  * [Tip 2: Dealing with the Cache](#tip-2-dealing-with-the-cache)
+  * [Tip 3: Debugging from Mobile](#tip-3-debugging-from-mobile)
 
 ---
 
@@ -58,10 +58,10 @@ https://localhost:31810/pls/apex/apex_vmorneau/r/1694/files/static/v1426/js/app.
 
 > Quick analysis from the URL above:
 >
-> - `https://localhost:31810/` is my domain
-> - `apex_vmorneau` is my workspace
-> - `1694` is my application ID
-> - `/js/app.js` is the location of my file in the Shared Components
+> * `https://localhost:31810/` is my domain
+> * `apex_vmorneau` is my workspace
+> * `1694` is my application ID
+> * `/js/app.js` is the location of my file in the Shared Components
 
 This kind of static file placement is good for most cases, but it will not satisfy the PWA requirements. In a PWA, some files need to be served from another location.
 
@@ -69,13 +69,13 @@ This kind of static file placement is good for most cases, but it will not satis
 
 In [Part 4](./part4.md) and [Part 5](./part5.md) we discuss two particular files:
 
-- `manifest.json`: _enables installation of the APEX application on a device_
-- `sw.js` _enables offline usage, synchronization and push notifications_
+* `manifest.json`: _enables installation of the APEX application on a device_
+* `sw.js` _enables offline usage, synchronization and push notifications_
 
 These two files are at the heart of a PWA and they require a special treatment: **they need to be at the root level of your APEX environment.** Taking the domain example from above (`https://localhost:31810/`), we need these two files to be located there:
 
-- `https://localhost:31810/manifest.json`
-- `https://localhost:31810/sw.js`
+* `https://localhost:31810/manifest.json`
+* `https://localhost:31810/sw.js`
 
 The browser handles these two files differently than regular JavaScript and JSON files. To function properly, they need to be same origin as the APEX page. If you don't do that, you'll get errors similar to:
 

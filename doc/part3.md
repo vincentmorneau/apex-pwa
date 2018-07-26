@@ -8,22 +8,22 @@ If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, h
 
 ## APEX as a PWA: The Complete Guide
 
-- [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
-- [Part 2: Setup and Development Tips](./doc/part2.md)
-- **Part 3: JavaScript Recap**
-- [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-- [Part 5: Using an APEX App Offline](./doc/part5.md)
-- [Part 6: Handling Background Sync](./doc/part6.md)
-- [Part 7: Sending Push Notifications](./doc/part7.md)
-- [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
+* [Part 2: Setup and Development Tips](./doc/part2.md)
+* **Part 3: JavaScript Recap**
+* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
+* [Part 5: Using an APEX App Offline](./doc/part5.md)
+* [Part 6: Handling Background Sync](./doc/part6.md)
+* [Part 7: Sending Push Notifications](./doc/part7.md)
+* [Part 8: Final Thoughts](./doc/part8.md)
 
 ## Part 3: Table of Content
 
-- [Synchronous JavaScript](#synchronous-javascript)
-- [Asynchronous JavaScript](#asynchronous-javascript)
-- [Promises](#promises)
-- [Async / Await](#async-await)
-- [Namespaces](#namespaces)
+* [Synchronous JavaScript](#synchronous-javascript)
+* [Asynchronous JavaScript](#asynchronous-javascript)
+* [Promises](#promises)
+* [Async / Await](#async-await)
+* [Namespaces](#namespaces)
 
 ---
 
@@ -126,7 +126,7 @@ something(1) // (2)
 
 Observations:
 
-1. I am declaring a function called `something` and all it does is returning the result of an application process called `process_name`.
+1. Declaring a function called `something` and all it does is returning the result of an application process called `process_name`.
 2. Invoking the JavaScript function `something()` will trigger the application process without blocking the page interaction.
 3. If the application process goes well, the promise becomes _Resolved_ and we can use the `.then()` syntax to indicate what to do next.
 4. If the application process fails for any reason, the promise becomes _Rejected_ and we are able to catch the error.

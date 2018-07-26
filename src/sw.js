@@ -1,13 +1,21 @@
 // THESE FILES (sw.js and manifest.json) HAVE TO BE SERVED FROM ORDS DOC ROOT. MORE INFO:
 // https://github.com/vincentmorneau/apex-pwa/blob/master/doc/part2.md
 
+// The list of all APEX pages in your app
+// Example: If app 1694 contains pages 1 and 2
+const apexAppId = 1694; // CHANGE_ME
+const apexPages = [1, 2]; // CHANGE_ME
+
+// It is recommended to have a page 404 as well, in case something goes wrong with the cache
+// Example: If the APEX app contains page 404
+const apex404Page = [404]; // CHANGE_ME
+
+// Leave these global variables as is
 const cacheStaticName = 'static-cache';
-const cacheStaticPages = [1];
-const cacheStaticPagesUrl = [];
 const cache404Name = '404-cache';
-const cache404Pages = [404];
-const cache404PagesUrl = [];
 const cacheDynamicName = 'dynamic-cache';
+const apexPagesUrl = [];
+const apex404PagesUrl = [];
 
 async function installSW() {
 	let clientUrl;
@@ -17,45 +25,49 @@ async function installSW() {
 		includeUncontrolled: true
 	}).then(clients => {
 		for (const client of clients) {
-			clientUrl = new URL(client.url);
+			if (new URL(client.url).search.split(':')[0] === "?p=" + apexAppId) {
+				clientUrl = new URL(client.url);
+			}
 		}
 	});
 
-	// Apply the current page URL to the array of static pages to cache (cacheStaticPages)
-	for (const cacheStaticPage of cacheStaticPages) {
-		let queryString = clientUrl.search.split(':');
-		queryString[1] = cacheStaticPage;
-		queryString = queryString.join(':');
-		cacheStaticPagesUrl.push(clientUrl.origin + clientUrl.pathname + queryString);
+	if (clientUrl) {
+		// Apply the current page URL to the array of static pages to cache (apexPages)
+		for (const apexPage of apexPages) {
+			let queryString = clientUrl.search.split(':');
+			queryString[1] = apexPage;
+			queryString = queryString.join(':');
+			apexPagesUrl.push(clientUrl.origin + clientUrl.pathname + queryString);
+		}
+
+		// Apply the current page URL to the array of static pages to cache (apex404Page)
+		for (const apexPage of apex404Page) {
+			let queryString = clientUrl.search.split(':');
+			queryString[1] = apexPage;
+			queryString = queryString.join(':');
+			apex404PagesUrl.push(clientUrl.origin + clientUrl.pathname + queryString);
+		}
+
+		// Store all static pages in the static cache
+		const cacheStatic = await caches.open(cacheStaticName);
+		cacheStatic.addAll(apexPagesUrl)
+			.then(function () {
+				console.log('[SW] Caching static files', apexPagesUrl);
+			})
+			.catch(function (err) {
+				console.error(err);
+			});
+
+		// Store all 404 pages in the 404 cache
+		const cache404 = await caches.open(cache404Name);
+		cache404.addAll(apex404PagesUrl)
+			.then(function () {
+				console.log('[SW] Caching 404 files', apex404PagesUrl);
+			})
+			.catch(function (err) {
+				console.error(err);
+			});
 	}
-
-	// Apply the current page URL to the array of static pages to cache (cache404Pages)
-	for (const cache404Page of cache404Pages) {
-		let queryString = clientUrl.search.split(':');
-		queryString[1] = cache404Page;
-		queryString = queryString.join(':');
-		cache404PagesUrl.push(clientUrl.origin + clientUrl.pathname + queryString);
-	}
-
-	// Store all static pages in the static cache
-	const cacheStatic = await caches.open(cacheStaticName);
-	cacheStatic.addAll(cacheStaticPagesUrl)
-		.then(function() {
-			console.log('[SW] Caching static files', cacheStaticPagesUrl);
-		})
-		.catch(function(err) {
-			console.error(err);
-		});
-
-	// Store all 404 pages in the 404 cache
-	const cache404 = await caches.open(cache404Name);
-	cache404.addAll(cache404PagesUrl)
-		.then(function() {
-			console.log('[SW] Caching 404 files', cache404PagesUrl);
-		})
-		.catch(function(err) {
-			console.error(err);
-		});
 }
 
 async function fetchSW(event) {
@@ -85,7 +97,7 @@ async function fetchSW(event) {
 			console.log('[SW] Fetching from server & cache failed for request:', event.request.url);
 			if (event.request.headers.get('accept').includes('text/html')) {
 				const cache404 = await caches.open(cache404Name);
-				return cache404.match(cache404PagesUrl);
+				return cache404.match(apex404PagesUrl);
 			}
 		}
 	}
@@ -113,8 +125,10 @@ self.addEventListener('sync', event => {
 self.addEventListener('push', event => {
 	console.log('[SW] Push Received.', event);
 
+	// Parse the notification received as a JSON object
 	notification = JSON.parse(event.data.text());
 
+	// Show the notification ot the user
 	event.waitUntil(
 		self.registration.showNotification(
 			notification.title, {

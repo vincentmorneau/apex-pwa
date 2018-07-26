@@ -6,18 +6,18 @@
 
 ## APEX as a PWA: The Complete Guide
 
-- [Part 1: Introducing PWAs](./doc/part1.md)
-- [Part 2: Setup and Development Tips](./doc/part2.md)
-- [Part 3: JavaScript Recap](./doc/part3.md)
-- [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-- [Part 5: Using an APEX App Offline](./doc/part5.md)
-- [Part 6: Handling Background Sync](./doc/part6.md)
-- **Part 7: Sending Push Notifications**
-- [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 1: Introducing PWAs](./doc/part1.md)
+* [Part 2: Setup and Development Tips](./doc/part2.md)
+* [Part 3: JavaScript Recap](./doc/part3.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
+* [Part 5: Using an APEX App Offline](./doc/part5.md)
+* [Part 6: Handling Background Sync](./doc/part6.md)
+* **Part 7: Sending Push Notifications**
+* [Part 8: Final Thoughts](./doc/part8.md)
 
 ## Part 7: Table of Content
 
-- [todo](#todo)
+* [todo](#todo)
 
 ---
 

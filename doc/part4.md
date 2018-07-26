@@ -6,22 +6,25 @@
 
 ## APEX as a PWA: The Complete Guide
 
-- [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
-- [Part 2: Setup and Development Tips](./doc/part2.md)
-- [Part 3: JavaScript Recap](./doc/part3.md)
-- **Part 4: Installing an APEX App into a Mobile Device**
-- [Part 5: Using an APEX App Offline](./doc/part5.md)
-- [Part 6: Handling Background Sync](./doc/part6.md)
-- [Part 7: Sending Push Notifications](./doc/part7.md)
-- [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
+* [Part 2: Setup and Development Tips](./doc/part2.md)
+* [Part 3: JavaScript Recap](./doc/part3.md)
+* **Part 4: Installing an APEX App into a Mobile Device**
+* [Part 5: Using an APEX App Offline](./doc/part5.md)
+* [Part 6: Handling Background Sync](./doc/part6.md)
+* [Part 7: Sending Push Notifications](./doc/part7.md)
+* [Part 8: Final Thoughts](./doc/part8.md)
 
 ## Part 4: Table of Content
 
-- [Characteristics](#characteristics)
-- [Architecture](#Architecture)
-- [Installation Criteria](#understanding-installation-criteria)
-- [Installation Prompt](#installation-prompt)
-- [Using the Installed App](#using-the-installed-app)
+* [Characteristics](#characteristics)
+* [Architecture](#Architecture)
+  * [`manifest.json`](#manifest-json)
+  * [Referencing `manifest.json` in APEX](#referencing-manifest-json-in-apex)
+  * [Adding an "Install" Button to an APEX App](#adding-an-install-button-to-an-apex-app)
+* [Installation Criteria](#understanding-installation-criteria)
+* [Installation Prompt](#installation-prompt)
+* [Using the Installed App](#using-the-installed-app)
 
 ---
 
@@ -33,19 +36,19 @@ It's always easier to reach for an icon than reaching for a browser bookmark.
 
 We are **not** adding our APEX application to the App Store or Google play. You can use [Cordova](https://cordova.apache.org/) to build an hybrid app like that. A PWA offers an installation button within the app itself. When clicked, the PWA proceeds to install itself on the device, and the button disappears as it's no longer necessary.
 
-Preview of the installation feature:
+Preview:
 
 ![Example](./preview-install.gif)
 
 Observations:
 
-- User clicks on a button `Install this app` in an APEX application
-- Confirmation window appears, asking to add this app to the home screen
-- User clicks "Add to Home Screen"
-- The PWA proceeds to install itself and adds an icon to the home screen
-- User clicks the icon on the home screen
-- Splash screen appears, like a native app
-- APEX application opens in full screen
+* User clicks on a button `Install this app` in an APEX application
+* Confirmation window appears, asking to add this app to the home screen
+* User clicks "Add to Home Screen"
+* The PWA proceeds to install itself and adds an icon to the home screen
+* User clicks the icon on the home screen
+* Splash screen appears, like a native app
+* APEX application opens in full screen
 
 ## Architecture
 
@@ -174,6 +177,8 @@ When the criteria above are met, the browser will trigger an event called `befor
 To store the event and execute the installation later, we will use this technique:
 
 ```javascript
+/* === #APP_IMAGES#js/app.js === */
+
 // Global variable used to store the beforeinstallprompt event
 var installPrompt;
 
@@ -196,6 +201,8 @@ window.addEventListener('appinstalled', function (event) {
 The code above stores the installation event and makes the installation button appear in the navigation bar. As indicated earlier, the installation button invokes `pwa.install`, which is executes the following code:
 
 ```javascript
+/* === #APP_IMAGES#js/app.js === */
+
 pwa.install = function() {
   // Show the installation prompt, using the global variable previously set
   installPrompt.prompt();

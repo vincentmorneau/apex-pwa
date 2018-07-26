@@ -39,13 +39,15 @@ pwa.init = function () {
 		navigator.serviceWorker
 			.register('/sw.js')
 			.then(function (registeredServiceWorker) {
-				apexServiceWorker = registeredServiceWorker;
 				apex.debug.log('Service worker registered!');
+				// Store the service worker for future use
+				apexServiceWorker = registeredServiceWorker;
 				// Controls the display (hide and show) of the PWA buttons
 				pwa.ui.refresh();
-			}).catch(pwa.promise.rejected);
+			}).catch(function (err) {
+				apex.debug.error('Service worker failed to register.', err);
+			});
 	} else {
-
 		// Controls the display (hide and show) of the PWA buttons
 		pwa.ui.refresh();
 		apex.debug.warn('Service workers are not supported by your browser.');
@@ -54,7 +56,9 @@ pwa.init = function () {
 	// Fetch the saved offline tasks from the IndexedDB and store them into global variable offlineTasks
 	localforage.getItem('offline-tasks').then(function (tasks) {
 		offlineTasks = tasks || [];
-	}).catch(pwa.promise.rejected);
+	}).catch(function (err) {
+		apex.debug.error('Fetching offline tasks failed.', err);
+	});
 };
 
 /**
@@ -146,13 +150,6 @@ pwa.promise = {
 				x01: name
 			}
 		);
-	},
-
-	/**
-	 * Function that handles a rejected promise and logs it
-	 **/
-	rejected: function (err) {
-		apex.debug.error('Promise is rejected: ', err);
 	}
 };
 
@@ -171,7 +168,9 @@ pwa.call = {
 				.then(function (data) {
 					// Receives data from the server, and display the result in an alert
 					apex.message.alert(JSON.stringify(data));
-				}).catch(pwa.promise.rejected);
+				}).catch(function (err) {
+					apex.debug.error('Invoking "something" failed.', err);
+				});
 		} else {
 			// User is offline, then add the promise into a stack of tasks
 			pwa.task.add(arguments);
@@ -199,7 +198,9 @@ pwa.task = {
 
 		localforage.setItem('offline-tasks', offlineTasks).then(function (tasks) {
 			// new task was saved using IndexedDB
-		}).catch(pwa.promise.rejected);
+		}).catch(function (err) {
+			apex.debug.error('Setting offline tasks failed.', err);
+		});
 
 		// Update the error message with the new task
 		pwa.event.offline();
@@ -222,7 +223,9 @@ pwa.task = {
 		localforage.clear().then(function () {
 			offlineTasks = [];
 			apex.debug.log('Database "offline-tasks" is now empty.');
-		}).catch(pwa.promise.rejected);
+		}).catch(function (err) {
+			apex.debug.error('Clearing offline tasks failed.', err);
+		});
 	}
 };
 
@@ -316,7 +319,9 @@ pwa.notification = {
 								pwa.ui.refresh();
 							}
 						})
-						.catch(pwa.promise.rejected);
+						.catch(function (err) {
+							apex.debug.error('Subscribing to notifications failed.', err);
+						});
 				} else {
 					apex.debug.warn('Notification permission denied.');
 				}
