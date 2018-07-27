@@ -2,10 +2,10 @@ var admin = require('firebase-admin');
 var webpush = require('web-push');
 
 // THE FOLLOWING FILE REFERENCE IS YOUR FIREBASE SERVICE ACCOUNT FILE
-var serviceAccount = require("./firebase.json");
+var serviceAccount = require('./firebase.json');
 
-var express = require("express");
-var bodyParser = require("body-parser");
+var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 app.use(bodyParser.json());
@@ -29,7 +29,7 @@ admin.initializeApp({
 });
 
 // Basic endpoint for this REST API
-app.get("/", function(req, res) {
+app.get('/', function(req, res) {
 	res.status(200).send({
 		message: 'Welcome to our REST API'
 	});
@@ -37,7 +37,7 @@ app.get("/", function(req, res) {
 
 // REST endpoint for sending push notifications
 app.get('/push', function(req, res) {
-	// Get the "notifications" module from Firebase
+	// Get the 'notifications' module from Firebase
 	admin.database().ref('notifications').once('value')
 		.then(function(subscriptions) {
 			// Iterate through all subscriptions

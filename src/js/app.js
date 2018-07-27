@@ -44,6 +44,16 @@ pwa.init = function () {
 			}).catch(function (err) {
 				console.error('Service worker failed to register.', err);
 			});
+
+		navigator.serviceWorker.addEventListener('message', function (event) {
+			if (event.data.refreshReportIds) {
+				for (var key in event.data.refreshReportIds) {
+					if (event.data.refreshReportIds.hasOwnProperty(key)) {
+						apex.region(event.data.refreshReportIds[key]).refresh();
+					}
+				}
+			}
+		});
 	} else {
 		console.warn('Service workers are not supported by your browser.');
 		pwa.ui.refresh();
@@ -66,7 +76,7 @@ pwa.ui = {
 		pwa.event.offline();
 
 		// Get the subscribe notification button object
-		var subscribeBtn = document.querySelector(".pwa-subscribe-notifications-btn button");
+		var subscribeBtn = document.querySelector('.pwa-subscribe-notifications-btn button');
 
 		// Check if notifications are supported
 		if ('PushManager' in window) {
@@ -96,7 +106,7 @@ pwa.ui = {
 		}
 
 		// Get the install button object
-		var installBtn = document.querySelector(".pwa-install-btn button");
+		var installBtn = document.querySelector('.pwa-install-btn button');
 
 		if (installPrompt) {
 			// App is ready to install, so show the button
@@ -135,10 +145,11 @@ pwa.p1 = {
 	/**
 	 * @function addComment
 	 * @example pwa.p1.addComment('Hello World');
+	 * @param {string} comment The comment to add
 	 **/
 	addComment: function (comment) {
-		const endpoint = '/ords/dev/pwa/comments';
-		const options = {
+		var endpoint = '/ords/dev/pwa/comments';
+		var options = {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -148,13 +159,13 @@ pwa.p1 = {
 				pwa_comment_by: appUser
 			})
 		};
+		var refreshReportId = 'comments-report';
 
 		// Check if the user is online
 		if (navigator.onLine) {
-			console.log(111);
 			fetch(endpoint, options)
 				.then(function (data) {
-					apex.region('comments-report').refresh();
+					apex.region(refreshReportId).refresh();
 				}).catch(function (err) {
 					console.error('Adding comment failed.', err);
 				});
@@ -163,16 +174,31 @@ pwa.p1 = {
 				name: 'pwa-offline-tasks'
 			});
 			localforage.setItem(uuidv4(), {
-					endpoint,
-					options
+					endpoint: endpoint,
+					options: options,
+					refreshReportId: refreshReportId
 				})
 				.then(function (tasks) {
 					console.log('Saved offline task successfully.', tasks);
-					// Trigger the sync event
+					// Register the sync event on the service worker
 					apexServiceWorker.sync.register('pwa-offline-tasks');
 				}).catch(function (err) {
 					console.error('Setting offline tasks failed.', err);
 				});
+
+			$("#comments-report .t-Comments").prepend(
+				apex.util.applyTemplate(
+					'<li class="t-Comments-item"><div class="t-Comments-icon a-MediaBlock-graphic"><div class="t-Comments-userIcon u-color-15" aria-hidden="true">#USER_ICON#</div></div><div class="t-Comments-body a-MediaBlock-content"><div class="t-Comments-info">#USER_NAME# &middot;<span class="t-Comments-date">#COMMENT_DATE#</span><span class="t-Comments-actions">#ACTIONS#</span></div><div class="t-Comments-comment">#COMMENT_TEXT#</div></div></li>', {
+						placeholders: {
+							USER_ICON: appUser.substring(0, 2).toUpperCase(),
+							USER_NAME: appUser,
+							COMMENT_DATE: new Date().toLocaleString(),
+							ACTIONS: '<span aria-hidden="true" class="fa fa-spinner fa-anim-spin"></span> Waiting on connection',
+							COMMENT_TEXT: comment
+						}
+					}
+				)
+			);
 		}
 
 		apex.item('P1_PWA_COMMENT').setValue('');
@@ -240,8 +266,7 @@ pwa.notification = {
 							return fetch(firebaseNotificationEndpoint, {
 								method: 'POST',
 								headers: {
-									'Content-Type': 'application/json',
-									'Accept': 'application/json'
+									'Content-Type': 'application/json'
 								},
 								body: JSON.stringify(notification)
 							});

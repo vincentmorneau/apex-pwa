@@ -1,4 +1,4 @@
-// Required library for IndexedDB
+// Required script for IndexedDB
 importScripts('/lib/localForage/localforage.min.js');
 
 // THESE FILES (sw.js and manifest.json) HAVE TO BE SERVED FROM ORDS DOC ROOT. MORE INFO:
@@ -20,9 +20,9 @@ const cacheDynamicName = 'dynamic-cache';
 const apexPagesUrl = [];
 const apex404PagesUrl = [];
 
-//
-// Service worker events
-//
+/**
+ * All service worker events
+ **/
 self.addEventListener('install', event => {
 	console.log('[SW] Installing service worker:', event);
 	event.waitUntil(installSW());
@@ -39,7 +39,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('sync', event => {
 	console.log('[SW] Syncing', event);
-	event.waitUntil(syncSW());
+	event.waitUntil(syncSW(event));
 });
 
 self.addEventListener('push', event => {
@@ -55,6 +55,25 @@ self.addEventListener('notificationclose', event => {
 	console.log('[SW] Notification closed', event);
 });
 
+/**
+ * @function broadcastRefresh
+ * Broadcasts a message to the client, which allows to refresh reports
+ * after data has been saved
+ **/
+function broadcastRefresh(refreshReportIds) {
+	self.clients.matchAll().then(function (clients) {
+		clients.forEach(function (client) {
+			client.postMessage({
+				refreshReportIds: refreshReportIds
+			});
+		});
+	});
+}
+
+/**
+ * @function installSW
+ * Installs all static resources for the app shell
+ **/
 async function installSW() {
 	let clientUrl;
 
@@ -63,7 +82,7 @@ async function installSW() {
 		includeUncontrolled: true
 	}).then(clients => {
 		for (const client of clients) {
-			if (new URL(client.url).search.split(':')[0] === "?p=" + apexAppId) {
+			if (new URL(client.url).search.split(':')[0] === '?p=' + apexAppId) {
 				clientUrl = new URL(client.url);
 			}
 		}
@@ -108,6 +127,10 @@ async function installSW() {
 	}
 }
 
+/**
+ * @function fetchSW
+ * Intercepts resources, caches resources, serves resources
+ **/
 async function fetchSW(event) {
 	try {
 		const serverResponse = await fetch(event.request);
@@ -141,21 +164,47 @@ async function fetchSW(event) {
 	}
 }
 
-async function syncSW() {
-	if (event.tag == 'pwa-offline-tasks') {
+/**
+ * @function syncSW
+ * Executes a list of offline tasks when the service worker detects connectivity is back
+ **/
+async function syncSW(event) {
+	// This example handles a sync task called pwa-offline-tasks
+	if (event.tag === 'pwa-offline-tasks') {
+		const tasks = [];
+		const refreshReportIds = [];
+
+		// Configure the IndexedDB to use pwa-offline-tasks database
 		localforage.config({
 			name: 'pwa-offline-tasks'
 		});
+
+		// Looping through all tasks in the pwa-offline-tasks database
 		localforage.iterate(function (value, key, iterationNumber) {
-			fetch(value.endpoint, value.options);
-		}).then(function () {
-			console.log('[SW] Background sync succeeded.');
+			// Building an array of tasks
+			tasks.push(fetch(value.endpoint, value.options));
+			refreshReportIds.push(value.refreshReportId);
+		}).then(function (data) {
+			Promise.all(tasks)
+				.then(function (data) {
+					console.log('[SW] Offline tasks sync succeeded.', data);
+					// Refresh APEX reports
+					broadcastRefresh(refreshReportIds);
+					// CLear the IndexedDB
+					localforage.clear();
+				}).catch(function (err) {
+					console.error('[SW] Offline tasks sync failed:', err);
+				});
 		}).catch(function (err) {
-			console.error('[SW] Background sync failed:', err);
+			console.error('[SW] Iterate through offline tasks failed:', err);
 		});
 	}
 }
 
+/**
+ * @function pushSW
+ * Received a notification and shows it to the user
+ **/
 async function pushSW(event) {
 	// Parse the notification received as a JSON object
 	notification = JSON.parse(event.data.text());
@@ -164,8 +213,8 @@ async function pushSW(event) {
 	self.registration.showNotification(
 		notification.title, {
 			body: notification.body,
-			icon: "./images/icons/icon-192x192.png",
-			badge: "./images/icons/icon-192x192.png"
+			icon: './images/icons/icon-192x192.png',
+			badge: './images/icons/icon-192x192.png'
 		}
 	);
 }
