@@ -1,3 +1,6 @@
+// Required library for IndexedDB
+importScripts('/lib/localForage/localforage.min.js');
+
 // THESE FILES (sw.js and manifest.json) HAVE TO BE SERVED FROM ORDS DOC ROOT. MORE INFO:
 // https://github.com/vincentmorneau/apex-pwa/blob/master/doc/part2.md
 
@@ -16,6 +19,41 @@ const cache404Name = '404-cache';
 const cacheDynamicName = 'dynamic-cache';
 const apexPagesUrl = [];
 const apex404PagesUrl = [];
+
+//
+// Service worker events
+//
+self.addEventListener('install', event => {
+	console.log('[SW] Installing service worker:', event);
+	event.waitUntil(installSW());
+});
+
+self.addEventListener('activate', event => {
+	console.log('[SW] Activating service worker:', event);
+	return self.clients.claim();
+});
+
+self.addEventListener('fetch', event => {
+	event.respondWith(fetchSW(event));
+});
+
+self.addEventListener('sync', event => {
+	console.log('[SW] Syncing', event);
+	event.waitUntil(syncSW());
+});
+
+self.addEventListener('push', event => {
+	console.log('[SW] Push Received.', event);
+	event.waitUntil(pushSW(event));
+});
+
+self.addEventListener('notificationclick', event => {
+	console.log('[SW] Notification clicked', event);
+});
+
+self.addEventListener('notificationclose', event => {
+	console.log('[SW] Notification closed', event);
+});
 
 async function installSW() {
 	let clientUrl;
@@ -103,47 +141,31 @@ async function fetchSW(event) {
 	}
 }
 
-self.addEventListener('install', event => {
-	console.log('[SW] Installing service worker:', event);
-	event.waitUntil(installSW());
-});
+async function syncSW() {
+	if (event.tag == 'pwa-offline-tasks') {
+		localforage.config({
+			name: 'pwa-offline-tasks'
+		});
+		localforage.iterate(function (value, key, iterationNumber) {
+			fetch(value.endpoint, value.options);
+		}).then(function () {
+			console.log('[SW] Background sync succeeded.');
+		}).catch(function (err) {
+			console.error('[SW] Background sync failed:', err);
+		});
+	}
+}
 
-self.addEventListener('activate', event => {
-	console.log('[SW] Activating service worker:', event);
-	return self.clients.claim();
-});
-
-self.addEventListener('fetch', event => {
-	event.respondWith(fetchSW(event));
-});
-
-self.addEventListener('sync', event => {
-	console.log('[SW] Syncing', event);
-	// Re-execute the call stack
-});
-
-self.addEventListener('push', event => {
-	console.log('[SW] Push Received.', event);
-
+async function pushSW(event) {
 	// Parse the notification received as a JSON object
 	notification = JSON.parse(event.data.text());
 
-	// Show the notification ot the user
-	event.waitUntil(
-		self.registration.showNotification(
-			notification.title, {
-				body: notification.body,
-				icon: "./images/icons/icon-192x192.png",
-				badge: "./images/icons/icon-192x192.png"
-			}
-		)
+	// Show the notification
+	self.registration.showNotification(
+		notification.title, {
+			body: notification.body,
+			icon: "./images/icons/icon-192x192.png",
+			badge: "./images/icons/icon-192x192.png"
+		}
 	);
-});
-
-self.addEventListener('notificationclick', event => {
-	console.log('[SW] Notification clicked', event);
-});
-
-self.addEventListener('notificationclose', event => {
-	console.log('[SW] Notification closed', event);
-});
+}

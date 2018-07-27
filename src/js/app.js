@@ -11,9 +11,6 @@ var hasSubscribedNotifications = false;
 // This object stores the installation prompt event
 var installPrompt;
 
-// Array of offline tasks. To be executed when connectivity comes back.
-var offlineTasks;
-
 // Public key from Firebase
 // CHANGE THIS VALUE
 var firebaseVapidPublicKey = 'BOFoGrYiN1P70-UMcQ9vbfCJl9x5MXfxqCBbBqOVvim_s63i9xpM9P0PwqHvfNAs2D1rKYFOlMXhD3_Rtuybl2o';
@@ -29,6 +26,7 @@ var pwa = {};
 
 /**
  * @module pwa.init
+ * @example pwa.init();
  * Invoked on page load.
  * Used for registering our service worker.
  **/
@@ -39,35 +37,30 @@ pwa.init = function () {
 		navigator.serviceWorker
 			.register('/sw.js')
 			.then(function (registeredServiceWorker) {
-				apex.debug.log('Service worker registered!');
+				console.log('Service worker registered!');
 				// Store the service worker for future use
 				apexServiceWorker = registeredServiceWorker;
-				// Controls the display (hide and show) of the PWA buttons
 				pwa.ui.refresh();
 			}).catch(function (err) {
-				apex.debug.error('Service worker failed to register.', err);
+				console.error('Service worker failed to register.', err);
 			});
 	} else {
-		// Controls the display (hide and show) of the PWA buttons
+		console.warn('Service workers are not supported by your browser.');
 		pwa.ui.refresh();
-		apex.debug.warn('Service workers are not supported by your browser.');
 	}
-
-	// Fetch the saved offline tasks from the IndexedDB and store them into global variable offlineTasks
-	localforage.getItem('offline-tasks').then(function (tasks) {
-		offlineTasks = tasks || [];
-	}).catch(function (err) {
-		apex.debug.error('Fetching offline tasks failed.', err);
-	});
 };
 
 /**
  * @module pwa.ui
- * Controls the display (hide and show) of these buttons:
- * - Subscribe to notifications
- * - Install this app
  **/
 pwa.ui = {
+	/**
+	 * @function refresh
+	 * @example pwa.notification.refresh();
+	 * Controls the display(hide and show) of these buttons:
+	 * - Subscribe to notifications
+	 * - Install this app
+	 **/
 	refresh: function () {
 		// Display the error message on screen, if any exists from a previous event
 		pwa.event.offline();
@@ -128,104 +121,61 @@ pwa.install = function () {
 	// Wait for the user to respond to the prompt
 	installPrompt.userChoice
 		.then(function (choiceResult) {
-			apex.debug.log('User ' + choiceResult.outcome + ' to install the app');
+			console.log('User ' + choiceResult.outcome + ' to install the app');
 			// Reset the install prompt
 			installPrompt = null;
-			// Controls the display (hide and show) of the PWA buttons
 			pwa.ui.refresh();
 		});
 };
 
 /**
- * @module pwa.promise
+ * @module pwa.p1
  **/
-pwa.promise = {
+pwa.p1 = {
 	/**
-	 * Invoke application process "something"
-	 * Returns a promise
+	 * @function addComment
+	 * @example pwa.p1.addComment('Hello World');
 	 **/
-	something: function (name) {
-		return apex.server.process(
-			'something', {
-				x01: name
-			}
-		);
-	}
-};
+	addComment: function (comment) {
+		const endpoint = '/ords/dev/pwa/comments';
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pwa_comment: comment,
+				pwa_comment_by: appUser
+			})
+		};
 
-/**
- * @module pwa.call
- **/
-pwa.call = {
-	/**
-	 * Function that handles a rejected promise and logs it
-	 **/
-	something: function (name) {
 		// Check if the user is online
 		if (navigator.onLine) {
-			// User is online, then invoke the appropriate promise (something)
-			pwa.promise.something(name)
+			console.log(111);
+			fetch(endpoint, options)
 				.then(function (data) {
-					// Receives data from the server, and display the result in an alert
-					apex.message.alert(JSON.stringify(data));
+					apex.region('comments-report').refresh();
 				}).catch(function (err) {
-					apex.debug.error('Invoking "something" failed.', err);
+					console.error('Adding comment failed.', err);
 				});
 		} else {
-			// User is offline, then add the promise into a stack of tasks
-			pwa.task.add(arguments);
-			// Trigger the sync event
-			apexServiceWorker.sync.register('sync-something');
+			localforage.config({
+				name: 'pwa-offline-tasks'
+			});
+			localforage.setItem(uuidv4(), {
+					endpoint,
+					options
+				})
+				.then(function (tasks) {
+					console.log('Saved offline task successfully.', tasks);
+					// Trigger the sync event
+					apexServiceWorker.sync.register('pwa-offline-tasks');
+				}).catch(function (err) {
+					console.error('Setting offline tasks failed.', err);
+				});
 		}
 
-		apex.item('P1_NAME').setValue('');
-	}
-};
-
-/**
- * @module pwa.task
- **/
-pwa.task = {
-	/**
-	 * Function that appends a new task to the array of tasks
-	 **/
-	add: function (task) {
-		// Append the new task to the existing array of pending tasks
-		offlineTasks.push({
-			name: task.callee.name,
-			arguments: Array.prototype.slice.call(task)
-		});
-
-		localforage.setItem('offline-tasks', offlineTasks).then(function (tasks) {
-			// new task was saved using IndexedDB
-		}).catch(function (err) {
-			apex.debug.error('Setting offline tasks failed.', err);
-		});
-
-		// Update the error message with the new task
-		pwa.event.offline();
-	},
-
-	/**
-	 * Function that executes all tasks in the array of tasks
-	 * Then resets the array of tasks to an empty array
-	 **/
-	run: function () {
-		// Iterate through all tasks in the array of tasks
-		for (var key in offlineTasks) {
-			if (Object.prototype.hasOwnProperty.call(offlineTasks, key)) {
-				apex.debug.log('Invoking', offlineTasks[key].name, '(', offlineTasks[key].arguments, ')');
-				pwa.call[offlineTasks[key].name].apply(null, offlineTasks[key].arguments);
-			}
-		}
-
-		// Resets the array of tasks to an empty array
-		localforage.clear().then(function () {
-			offlineTasks = [];
-			apex.debug.log('Database "offline-tasks" is now empty.');
-		}).catch(function (err) {
-			apex.debug.error('Clearing offline tasks failed.', err);
-		});
+		apex.item('P1_PWA_COMMENT').setValue('');
 	}
 };
 
@@ -234,46 +184,30 @@ pwa.task = {
  **/
 pwa.event = {
 	/**
-	 * Things to do when user gets back online:
-	 * 1) Show a message to the user that he's back onLine
-	 * 2) Go to the stack of pending tasks
+	 * @function online
+	 * @example pwa.event.online();
+	 * Show a message to the user that he's back online
 	 **/
-	online: function (event) {
+	online: function () {
 		if (navigator.onLine) {
-			var message = (offlineTasks.length > 0 ? '<br>Now running ' + offlineTasks.length + ' tasks.' : '');
-			apex.message.showPageSuccess('You are back online!' + message);
-			pwa.task.run();
+			apex.message.showPageSuccess('You are back online!');
 		}
 	},
 
 	/**
-	 * Things to do when user loses connectivity:
-	 * 1) Hide other messages
-	 * 2) Show a message to the user that he's lost connection
+	 * @function offline
+	 * @example pwa.event.offline();
+	 * Show a message to the user that he's lost connection
 	 **/
-	offline: function (event) {
+	offline: function () {
 		if (!navigator.onLine) {
 			$('#t_Alert_Success').remove();
-
-			var errors = [{
+			apex.message.clearErrors();
+			apex.message.showErrors([{
 				type: 'error',
 				location: 'page',
 				message: 'You have lost connection <span aria-hidden="true" class="fa fa-frown-o"></span>'
-			}];
-
-			// Iterate through all tasks in the array of tasks
-			for (var key in offlineTasks) {
-				if (Object.prototype.hasOwnProperty.call(offlineTasks, key)) {
-					errors.push({
-						type: 'error',
-						location: 'page',
-						message: '<span aria-hidden="true" class="fa fa-spinner fa-anim-spin"></span> Waiting to reconnect to execute: ' + offlineTasks[key].name
-					});
-				}
-			}
-
-			apex.message.clearErrors();
-			apex.message.showErrors(errors);
+			}]);
 		}
 	}
 };
@@ -282,13 +216,18 @@ pwa.event = {
  * @module pwa.notification
  **/
 pwa.notification = {
+	/**
+	 * @function ask
+	 * @example pwa.notification.ask();
+	 * Asks the permission to allow notifications
+	 **/
 	ask: function () {
 		// Check if the user has not subscribed yet, and if Notifications are supported
 		if (!hasSubscribedNotifications && 'Notification' in window && 'PushManager' in window) {
 			// Request permission to subscribe to notifications
 			Notification.requestPermission(function (result) {
 				if (result === 'granted') {
-					apex.debug.log('Notification permission granted!');
+					console.log('Notification permission granted!');
 
 					// Subscribe to the notification
 					apexServiceWorker.pushManager.subscribe({
@@ -320,10 +259,10 @@ pwa.notification = {
 							}
 						})
 						.catch(function (err) {
-							apex.debug.error('Subscribing to notifications failed.', err);
+							console.error('Subscribing to notifications failed.', err);
 						});
 				} else {
-					apex.debug.warn('Notification permission denied.');
+					console.warn('Notification permission denied.');
 				}
 			});
 		}
@@ -343,13 +282,12 @@ pwa.notification = {
 		event.preventDefault();
 		// Store the event in a global variable so it can be triggered later
 		installPrompt = event;
-		// Controls the display (hide and show) of the PWA buttons
 		pwa.ui.refresh();
 	});
 
 	// This event will be triggered after the app is installed
 	window.addEventListener('appinstalled', function (event) {
-		apex.debug.log('App was installed', event);
+		console.log('App was installed', event);
 	});
 
 	pwa.init();
