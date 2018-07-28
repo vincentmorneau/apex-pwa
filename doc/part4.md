@@ -143,6 +143,35 @@ Coincidentally, `manifest.json` also needs to go in the `<head></head>` section,
 
 ![Referencing manifest.json](./part4-referencing.png)
 
+_Favicon_ HTML code:
+
+```html
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="APEX PWA">
+<link rel="shortcut icon" href="#APP_IMAGES#images/icons/icon-72x72.png">
+<link rel="icon" href="#APP_IMAGES#images/icons/icon-72x72.png" sizes="72x72">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-72x72.png" sizes="72x72">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-96x96.png" sizes="96x96">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-128x128.png" sizes="128x128">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-144x144.png" sizes="144x144">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-152x152.png" sizes="152x152">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-384x384.png" sizes="384x384">
+<link rel="apple-touch-icon" href="#APP_IMAGES#images/icons/icon-512x512.png" sizes="512x512">
+<meta name="msapplication-TileImage" content="#APP_IMAGES#images/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#fff">
+<meta name="theme-color" content="#3f51b5">
+<script>
+var appImages = '#APP_IMAGES#';
+</script>
+```
+
+All these `meta` and `link` tags are for used for compatibility purposes across all platforms.
+
+At the end of the code we are declaring a JavaScript global variable (`appImages`) which will be used later in external JavaScript files.
+
 ### Adding an "Install" Button to an APEX App
 
 To install an APEX application _from the APEX application itself_, we need an install button somewhere. I find that having this button on the navigation bar makes sense, it can be placed anywhere.

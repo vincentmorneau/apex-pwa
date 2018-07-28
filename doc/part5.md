@@ -46,13 +46,20 @@ Preview:
 
 ![Example](./preview-offline.gif)
 
-Observations:
+Observations on a regular APEX application:
 
-* todo
-* todo
-* todo
+* User turns off the Wi-Fi
+* User navigates to another page
+* Application crashes
 
-To control resource caching, we have to look at service workers and the Cache API, both of which are native to web browser and constitutes the pillars of APEX offline usage.
+Observations on a regular APEX PWA application:
+
+* User turns off the Wi-Fi
+* Application indicates that there is no connectivity
+* User navigates to another page
+* Application is still usable
+
+To control resource caching, we have to look at service workers and the Cache API, both of which are native to web browsers and constitutes the pillars of APEX offline usage.
 
 Some fundamental paradigms of APEX will not work properly offline, like the _Interactive Report_ or the _Interactive Grid_. I think it's fair to disable some functionalities of the app while being offline, especially those that rely heavily on server-side processing.
 

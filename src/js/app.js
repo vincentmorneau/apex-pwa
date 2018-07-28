@@ -144,64 +144,105 @@ pwa.install = function () {
 pwa.p1 = {
 	/**
 	 * @function addComment
-	 * @example pwa.p1.addComment('Hello World');
-	 * @param {string} comment The comment to add
+	 * @example pwa.p1.addComment();
 	 **/
-	addComment: function (comment) {
-		var endpoint = '/ords/dev/pwa/comments';
-		var options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				pwa_comment: comment,
-				pwa_comment_by: appUser
-			})
-		};
-		var refreshReportId = 'comments-report';
+	addComment: function () {
+		var apexPwaComment = apex.item('P1_PWA_COMMENT');
+		var apexPwaCommentBy = apex.item('P1_PWA_COMMENT_BY');
 
-		// Check if the user is online
-		if (navigator.onLine) {
-			fetch(endpoint, options)
-				.then(function (data) {
-					apex.region(refreshReportId).refresh();
-				}).catch(function (err) {
-					console.error('Adding comment failed.', err);
-				});
-		} else {
-			localforage.config({
-				name: 'pwa-offline-tasks'
+		var errors = [];
+
+		if (apexPwaComment.isEmpty()) {
+			errors.push({
+				type: "error",
+				location: ["inline"],
+				pageItem: "P1_PWA_COMMENT",
+				message: "Comment is required!",
+				unsafe: false
 			});
-			localforage.setItem(uuidv4(), {
-					endpoint: endpoint,
-					options: options,
-					refreshReportId: refreshReportId
-				})
-				.then(function (tasks) {
-					console.log('Saved offline task successfully.', tasks);
-					// Register the sync event on the service worker
-					apexServiceWorker.sync.register('pwa-offline-tasks');
-				}).catch(function (err) {
-					console.error('Setting offline tasks failed.', err);
-				});
-
-			$("#comments-report .t-Comments").prepend(
-				apex.util.applyTemplate(
-					'<li class="t-Comments-item"><div class="t-Comments-icon a-MediaBlock-graphic"><div class="t-Comments-userIcon u-color-15" aria-hidden="true">#USER_ICON#</div></div><div class="t-Comments-body a-MediaBlock-content"><div class="t-Comments-info">#USER_NAME# &middot;<span class="t-Comments-date">#COMMENT_DATE#</span><span class="t-Comments-actions">#ACTIONS#</span></div><div class="t-Comments-comment">#COMMENT_TEXT#</div></div></li>', {
-						placeholders: {
-							USER_ICON: appUser.substring(0, 2).toUpperCase(),
-							USER_NAME: appUser,
-							COMMENT_DATE: new Date().toLocaleString(),
-							ACTIONS: '<span aria-hidden="true" class="fa fa-spinner fa-anim-spin"></span> Waiting on connection',
-							COMMENT_TEXT: comment
-						}
-					}
-				)
-			);
 		}
 
-		apex.item('P1_PWA_COMMENT').setValue('');
+		if (apexPwaCommentBy.isEmpty()) {
+			errors.push({
+				type: "error",
+				location: ["inline"],
+				pageItem: "P1_PWA_COMMENT_BY",
+				message: "Name is required!",
+				unsafe: false
+			});
+		}
+
+		if (errors.length > 0) {
+			apex.message.clearErrors();
+			apex.message.showErrors(errors);
+		} else {
+			apex.message.clearErrors();
+			var endpoint = '/ords/dev/pwa/comments';
+			var options = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					pwa_comment: apexPwaComment.getValue(),
+					pwa_comment_by: apexPwaCommentBy.getValue()
+				})
+			};
+			var commentsReportId = 'comments-report';
+
+			// Check if the user is online
+			if (navigator.onLine) {
+				fetch(endpoint, options)
+					.then(function (data) {
+						apex.region(commentsReportId).refresh();
+					}).catch(function (err) {
+						console.error('Adding comment failed.', err);
+					});
+			} else {
+				localforage.config({
+					name: 'pwa-offline-tasks'
+				});
+				localforage.setItem(uuidv4(), {
+						endpoint: endpoint,
+						options: options,
+						refreshReportId: commentsReportId
+					})
+					.then(function (tasks) {
+						console.log('Saved offline task successfully.', tasks);
+						// Register the sync event on the service worker
+						apexServiceWorker.sync.register('pwa-offline-tasks');
+					}).catch(function (err) {
+						console.error('Setting offline tasks failed.', err);
+					});
+
+				$("#" + commentsReportId + " .t-Comments").prepend(
+					apex.util.applyTemplate(
+						'<li class="t-Comments-item">' +
+						'<div class="t-Comments-icon a-MediaBlock-graphic">' +
+						'<div class="t-Comments-userIcon u-color-15" aria-hidden="true">#USER_ICON#</div>' +
+						'</div>' +
+						'<div class="t-Comments-body a-MediaBlock-content">' +
+						'<div class="t-Comments-info">#USER_NAME# &middot;<span class="t-Comments-date">#COMMENT_DATE#</span>' +
+						'<span class="t-Comments-actions">#ACTIONS#</span>' +
+						'</div>' +
+						'<div class="t-Comments-comment">#COMMENT_TEXT#</div>' +
+						'</div>' +
+						'</li>', {
+							placeholders: {
+								USER_ICON: apexPwaCommentBy.getValue().substring(0, 2).toUpperCase(),
+								USER_NAME: apexPwaCommentBy.getValue(),
+								COMMENT_DATE: new Date().toLocaleString(),
+								ACTIONS: '<span aria-hidden="true" class="fa fa-spinner fa-anim-spin u-warning-text"></span> Waiting on connection',
+								COMMENT_TEXT: apexPwaComment.getValue()
+							}
+						}
+					)
+				);
+			}
+
+			apexPwaComment.setValue('');
+			apexPwaCommentBy.setValue('');
+		}
 	}
 };
 

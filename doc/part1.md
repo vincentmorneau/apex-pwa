@@ -55,7 +55,7 @@ Statistics don't lie. 87% of data consumption comes from native apps, leaving on
 
 To me this is misleading because the market is dominated by the likes of Google, Facebook, Twitter, Microsoft, Apple, etc. Of course people will be pulling more bandwidth from these giants than from my APEX application.
 
-But as an Oracle developer myself, I look at the chart above and I can't help but think there must be something going on there. I develop web apps using APEX, so what is it I'm missing?
+But as an Oracle developer, I look at the chart above and I can't help but think there must be something going on there. I develop web apps using APEX, so what is it I'm missing?
 
 ## PWA Concepts
 
@@ -86,6 +86,8 @@ A service worker is the mastermind at the center of the PWA concepts. It's the c
 The way we are going to allow offline usage is by caching the app shell. The app shell is what constitutes the user interface. By caching the app shell, the APEX app should load much faster since we don't need to hit the server for every page request.
 
 The browser provides a Cache API for storing resources. In the context of an APEX application, our app shell are going to be APEX pages, along with the necessary JavaScript, CSS and other files to allow browsing while offline.
+
+![Example](./preview-offline.gif)
 
 [Part 5](./part5.md) of this guide explains how to enable offline usage of an APEX application.
 
