@@ -127,7 +127,7 @@ As you are adding new JavaScript to your PWA, you might want to know about:
 
 ### Tip 3: Debugging from Mobile
 
-It's safe to say that most PWAs would be used on mobile devices, so it becomes increasingly important to test your APEX application on a mobile device before rolling it out to your users. _This tip is not directly related to the development of PWA, but still useful nonetheless._
+It's safe to say that most PWA would be used on mobile devices, so it becomes increasingly important to test your APEX application on a mobile device before rolling it out to your users. _This tip is not directly related to the development of PWA, but still useful nonetheless._
 
 We can simulate a mobile view on Chrome developer tools:
 

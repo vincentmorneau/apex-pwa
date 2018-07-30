@@ -6,7 +6,7 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing PWAs](./doc/part1.md)
+* [Part 1: Introducing PWA](./doc/part1.md)
 * [Part 2: Setup and Development Tips](./doc/part2.md)
 * [Part 3: JavaScript Recap](./doc/part3.md)
 * [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
@@ -21,9 +21,9 @@ I started looking into progressive web apps when submitting abstracts for Kscope
 
 The term _Progressive Web App_ is getting a lot more traction. But is it just just another buzzword? After much research, I can attest that it's not. It's actually a boring term to describe what is it: a series of concepts to progressively enhance your application experience.
 
-That's very important to understand: you do not need to implement all PWAs features at once. Start with one, perhaps an easy one, like in [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), then move progressively towards the other features. Eventually, you will get close to a complete PWA, but it should not be goal from the start. Especially with [Part 6: Handling Background Sync](./doc/part6.md), where the methodology requires manual coding of many aspects in an application. Baby steps.
+That's very important to understand: you do not need to implement all PWA features at once. Start with one, perhaps an easy one, like in [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), then move progressively towards the other features. Eventually, you will get close to a complete PWA, but it should not be goal from the start. Especially with [Part 6: Handling Background Sync](./doc/part6.md), where the methodology requires manual coding of many aspects in an application. Baby steps.
 
-I think we can only get more demand for PWAs in the future, as their features becomes more mainstream in web patterns. I know PWAs have a bright future and I feel very strongly about their adoption in APEX, because I think APEX is a pretty damn good candidate for it.
+I think we can only get more demand for PWA in the future, as their features becomes more mainstream in web patterns. I know PWA have a bright future and I feel very strongly about their adoption in APEX, because I think APEX is a pretty damn good candidate for it.
 
 ---
 

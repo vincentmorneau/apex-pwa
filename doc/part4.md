@@ -259,6 +259,6 @@ After the app has been installed, the button will disappear.
 
 ---
 
-With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./doc/part5.md) to start learning about _Service Workers_, which are the driving force of PWAs.
+With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./doc/part5.md) to start learning about _Service Workers_, which are the driving force of PWA.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

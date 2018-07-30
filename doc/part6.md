@@ -6,7 +6,7 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing PWAs](./doc/part1.md)
+* [Part 1: Introducing PWA](./doc/part1.md)
 * [Part 2: Setup and Development Tips](./doc/part2.md)
 * [Part 3: JavaScript Recap](./doc/part3.md)
 * [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)

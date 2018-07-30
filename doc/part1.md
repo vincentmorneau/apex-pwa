@@ -1,4 +1,4 @@
-# Part 1: Introducing PWAs
+# Part 1: Introducing PWA
 
 > This blog post series intends to cover everything there is to know about turning an APEX application into a Progressive Web App.
 >
@@ -6,7 +6,7 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* **Part 1: Introducing PWAs**
+* **Part 1: Introducing PWA**
 * [Part 2: Setup and Development Tips](./doc/part2.md)
 * [Part 3: JavaScript Recap](./doc/part3.md)
 * [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
@@ -29,7 +29,7 @@
 
 Let’s establish something clear right from the start: PWA stands for Progressive Web App and it refers to a bucket of concepts, aiming to close the gaps between traditional web apps and native apps.
 
-PWAs are not about _one_ technology, they're about a set of modern browser APIs that, put together, make the case for a very compelling web user experience that resembles a native app.
+PWA are not about _one_ technology, they're about a set of modern browser APIs that, put together, make the case for a very compelling web user experience that resembles a native app.
 
 I've always been a web developer. I love the openness of the web and the freedom it gives. I love the standards of the languages it uses. I love the fact that web apps can be released without involving users via system updates. I love that web apps don't need a special license to develop on a platform.
 
@@ -67,7 +67,7 @@ Here are the concepts I will be covering in this guide:
 
 ### App Manifest
 
-An app manifest is a file containing the configuration that allows for a web app to be installed on a device. In most cases PWAs tend to be installed on mobile devices, but the app manifest also allows for installing a web app into a desktop (Mac, Windows, Linux).
+An app manifest is a file containing the configuration that allows for a web app to be installed on a device. In most cases PWA tend to be installed on mobile devices, but the app manifest also allows for installing a web app into a desktop (Mac, Windows, Linux).
 
 We will reference the app manifest within APEX, so the app can be installed at any time when the user is browsing.
 
@@ -130,7 +130,7 @@ The next parts in this guide will cover implementation details with rich code sn
 
 2. **A PWA is faster than a traditional web app**
 
-   By leveraging the Cache API, PWAs can serve cached resources (APEX Pages) to the user, which is much faster than reaching to the server. When a user requests a resource that isn't cached already, the PWA will reach for the server and then cache the resource for later.
+   By leveraging the Cache API, PWA can serve cached resources (APEX Pages) to the user, which is much faster than reaching to the server. When a user requests a resource that isn't cached already, the PWA will reach for the server and then cache the resource for later.
 
    That is particularly easy for static resources such as HTML, JavaScript, CSS and images which constitute an APEX page, but also for data.
 
@@ -142,6 +142,6 @@ The next parts in this guide will cover implementation details with rich code sn
 
 ---
 
-Hopefully that cleared out the WHAT and the WHY around PWAs. Now let's head to the [Pre-requisites and APEX Setup](./part2.md) section, where we will establish the groundwork for the PWA code architecture.
+Hopefully that cleared out the WHAT and the WHY around PWA. Now let's head to the [Pre-requisites and APEX Setup](./part2.md) section, where we will establish the groundwork for the PWA code architecture.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

@@ -6,7 +6,7 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing PWAs](./doc/part1.md)
+* [Part 1: Introducing PWA](./doc/part1.md)
 * [Part 2: Setup and Development Tips](./doc/part2.md)
 * [Part 3: JavaScript Recap](./doc/part3.md)
 * [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
@@ -83,11 +83,15 @@ As indicated in [Part 2](./part2.md), the `sw.js` file must be located at the ro
 ```javascript
 /* === #APP_IMAGES#js/app.js === */
 
+// This will contain our service worker
+var apexServiceWorker = null;
+
 pwa.init = function () {
   if ('serviceWorker' in navigator) { // (1)
     navigator.serviceWorker
       .register('/sw.js') // (2)
       .then(function (registeredServiceWorker) {
+        apexServiceWorker = registeredServiceWorker;
         apex.debug.log('Service worker registered!');
       }).catch(function (err) {
         apex.debug.error('Service worker failed to register.', err);
