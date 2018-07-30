@@ -45,10 +45,14 @@ pwa.init = function () {
 				console.error('Service worker failed to register.', err);
 			});
 
+		// Receiving a message from the service worker
 		navigator.serviceWorker.addEventListener('message', function (event) {
+			// Check if there are any reports to refresh
 			if (event.data.refreshReportIds) {
+				// Loop in the reports to refresh
 				for (var key in event.data.refreshReportIds) {
 					if (event.data.refreshReportIds.hasOwnProperty(key)) {
+						// Refresh a report
 						apex.region(event.data.refreshReportIds[key]).refresh();
 					}
 				}
@@ -66,15 +70,12 @@ pwa.init = function () {
 pwa.ui = {
 	/**
 	 * @function refresh
-	 * @example pwa.notification.refresh();
+	 * @example pwa.ui.refresh();
 	 * Controls the display(hide and show) of these buttons:
 	 * - Subscribe to notifications
 	 * - Install this app
 	 **/
 	refresh: function () {
-		// Display the error message on screen, if any exists from a previous event
-		pwa.event.offline();
-
 		// Get the subscribe notification button object
 		var subscribeBtn = document.querySelector('.pwa-subscribe-notifications-btn button');
 
@@ -188,13 +189,13 @@ pwa.p1 = {
 					pwa_comment_by: apexPwaCommentBy.getValue()
 				})
 			};
-			var commentsReportId = 'comments-report';
+			var refreshReportId = 'comments-report';
 
 			// Check if the user is online
 			if (navigator.onLine) {
 				fetch(endpoint, options)
 					.then(function (data) {
-						apex.region(commentsReportId).refresh();
+						apex.region(refreshReportId).refresh();
 					}).catch(function (err) {
 						console.error('Adding comment failed.', err);
 					});
@@ -205,17 +206,17 @@ pwa.p1 = {
 				localforage.setItem(uuidv4(), {
 						endpoint: endpoint,
 						options: options,
-						refreshReportId: commentsReportId
+						refreshReportId: refreshReportId
 					})
-					.then(function (tasks) {
-						console.log('Saved offline task successfully.', tasks);
+					.then(function (data) {
+						console.log('Saved offline task successfully.', data);
 						// Register the sync event on the service worker
 						apexServiceWorker.sync.register('pwa-offline-tasks');
 					}).catch(function (err) {
 						console.error('Setting offline tasks failed.', err);
 					});
 
-				$("#" + commentsReportId + " .t-Comments").prepend(
+				$("#" + refreshReportId + " .t-Comments").prepend(
 					apex.util.applyTemplate(
 						'<li class="t-Comments-item">' +
 						'<div class="t-Comments-icon a-MediaBlock-graphic">' +
@@ -242,39 +243,6 @@ pwa.p1 = {
 
 			apexPwaComment.setValue('');
 			apexPwaCommentBy.setValue('');
-		}
-	}
-};
-
-/**
- * @module pwa.event
- **/
-pwa.event = {
-	/**
-	 * @function online
-	 * @example pwa.event.online();
-	 * Show a message to the user that he's back online
-	 **/
-	online: function () {
-		if (navigator.onLine) {
-			apex.message.showPageSuccess('You are back online!');
-		}
-	},
-
-	/**
-	 * @function offline
-	 * @example pwa.event.offline();
-	 * Show a message to the user that he's lost connection
-	 **/
-	offline: function () {
-		if (!navigator.onLine) {
-			$('#t_Alert_Success').remove();
-			apex.message.clearErrors();
-			apex.message.showErrors([{
-				type: 'error',
-				location: 'page',
-				message: 'You have lost connection <span aria-hidden="true" class="fa fa-frown-o"></span>'
-			}]);
 		}
 	}
 };
@@ -336,25 +304,63 @@ pwa.notification = {
 };
 
 /**
- * IIFE (Immediately-Invoked Function Expression)
+ * @module pwa.event
  **/
-(function () {
-	window.addEventListener('online', pwa.event.online);
-	window.addEventListener('offline', pwa.event.offline);
+pwa.event = {
+	/**
+	 * @function online
+	 * @example pwa.event.online
+	 * Show a message to the user that he's back online
+	 **/
+	online: function () {
+		apex.message.showPageSuccess('You are back online!');
+	},
 
-	// This event will be triggered after installation criteria are met
-	window.addEventListener('beforeinstallprompt', function (event) {
+	/**
+	 * @function offline
+	 * @example pwa.event.offline
+	 * Show a message to the user that he's lost connection
+	 **/
+	offline: function () {
+		$('#t_Alert_Success').remove();
+		apex.message.clearErrors();
+		apex.message.showErrors([{
+			type: 'error',
+			location: 'page',
+			message: 'You have lost connection <span aria-hidden="true" class="fa fa-frown-o"></span>'
+		}]);
+	},
+
+	/**
+	 * @function beforeinstallprompt
+	 * @example pwa.event.beforeinstallprompt
+	 * This event will be triggered after installation criteria are met
+	 **/
+	beforeinstallprompt: function (event) {
 		// Stop the automatic installation prompt
 		event.preventDefault();
 		// Store the event in a global variable so it can be triggered later
 		installPrompt = event;
 		pwa.ui.refresh();
-	});
+	},
 
-	// This event will be triggered after the app is installed
-	window.addEventListener('appinstalled', function (event) {
+	/**
+	 * @function appinstalled
+	 * @example pwa.event.appinstalled
+	 * This event will be triggered after the app is installed
+	 **/
+	appinstalled: function (event) {
 		console.log('App was installed', event);
-	});
+	}
+};
 
+/**
+ * IIFE (Immediately-Invoked Function Expression)
+ **/
+(function () {
+	window.addEventListener('online', pwa.event.online);
+	window.addEventListener('offline', pwa.event.offline);
+	window.addEventListener('beforeinstallprompt', pwa.event.beforeinstallprompt);
+	window.addEventListener('appinstalled', pwa.event.appinstalled);
 	pwa.init();
 })();

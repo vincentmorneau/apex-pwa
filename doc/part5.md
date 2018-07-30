@@ -110,7 +110,7 @@ Once the service worker is registered, the APEX application can now access `sw.j
 Let’s start with the most simple `sw.js` file possible. All it will do is listening to the `activate` event, which happens when our `app.js` invokes the service worker in the previous section.
 
 ```javascript
-/* === {server_root}/sw.js === */
+/* === ~/sw.js === */
 
 self.addEventListener('activate', event => {
   console.log('[SW] Activating service worker:', event);
@@ -146,7 +146,7 @@ We will leverage the service worker `install` event, which runs only on the firs
 We will use the code below to achieve static caching, but make sure to change the values of `apexAppId` and `apexPages` to reflect the nature of your own APEX application. _I wish there was a way to automatically fetch all pages without explicitly defining them. Right now I think it's not possible..._
 
 ```javascript
-/* === {server_root}/sw.js === */
+/* === ~/sw.js === */
 
 // The list of all APEX pages in your app
 // Example: If app 1694 contains pages 1 and 2
@@ -196,7 +196,7 @@ By intercepting the resource, the service worker can decide to cache the new res
 Dynamic caching is the center of the bullseye for the service worker, and it may even be simpler to understand than static caching:
 
 ```javascript
-/* === {server_root}/sw.js === */
+/* === ~/sw.js === */
 
 self.addEventListener('fetch', event => { // (1)
   const cacheRes = await caches.match(event.request); // (2)
