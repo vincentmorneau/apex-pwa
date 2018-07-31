@@ -6,14 +6,14 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing PWA](./doc/part1.md)
-* [Part 2: Setup and Development Tips](./doc/part2.md)
-* [Part 3: JavaScript Recap](./doc/part3.md)
-* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-* [Part 5: Using an APEX App Offline](./doc/part5.md)
+* [Part 1: Introducing PWA](./part1.md)
+* [Part 2: Setup and Development Tips](./part2.md)
+* [Part 3: JavaScript Recap](./part3.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./part4.md)
+* [Part 5: Using an APEX App Offline](./part5.md)
 * **Part 6: Handling Background Sync**
-* [Part 7: Sending Push Notifications](./doc/part7.md)
-* [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 7: Sending Push Notifications](./part7.md)
+* [Part 8: Final Thoughts](./part8.md)
 
 ## Part 6: Table of Content
 
@@ -30,7 +30,7 @@
 
 ## Characteristics
 
-[Part 5](./doc/part5.md) was a great first step which allows to view an application while being offline, but in the context of an APEX application I would argue that it's not useful enough if we can't save anything. Background sync is the concept we will explore to keep using the functions of our APEX application.
+[Part 5](./part5.md) was a great first step which allows to view an application while being offline, but in the context of an APEX application I would argue that it's not useful enough if we can't save anything. Background sync is the concept we will explore to keep using the functions of our APEX application.
 
 Since we can't reach the server when we are offline, the idea of background sync is to temporarily store data as persistent storage, then resubmit it to the server when the network is back. Persistent storage means that the data persists even if you refresh, leave the app or close the browser so that makes it really powerful when talking about mobile usage, where you don't necessarily have the application opened when the network is back. We will be leveraging the IndexedDB API and the Sync API for that.
 
@@ -346,6 +346,6 @@ After the service worker has sent the message, APEX is able to refresh the repor
 
 ---
 
-Now we can finally use an APEX application offline! While the example was basic, it covered most of the technicalities around background synchronization. By adapting the code above, you should be able to make your own application offline-ready. Let's head to [Part 7: Sending Push Notifications](./doc/part7.md) for the final chapter on PWA features.
+Now we can finally use an APEX application offline! While the example was basic, it covered most of the technicalities around background synchronization. By adapting the code above, you should be able to make your own application offline-ready. Let's head to [Part 7: Sending Push Notifications](./part7.md) for the final chapter on PWA features.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

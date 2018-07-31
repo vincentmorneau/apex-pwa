@@ -6,14 +6,14 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
+* [Part 1: Introducing Progressive Web Apps](./part1.md)
 * **Part 2: Setup and Development Tips**
-* [Part 3: JavaScript Recap](./doc/part3.md)
-* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-* [Part 5: Using an APEX App Offline](./doc/part5.md)
-* [Part 6: Handling Background Sync](./doc/part6.md)
-* [Part 7: Sending Push Notifications](./doc/part7.md)
-* [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 3: JavaScript Recap](./part3.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./part4.md)
+* [Part 5: Using an APEX App Offline](./part5.md)
+* [Part 6: Handling Background Sync](./part6.md)
+* [Part 7: Sending Push Notifications](./part7.md)
+* [Part 8: Final Thoughts](./part8.md)
 
 ## Part 2: Table of Content
 
@@ -119,7 +119,7 @@ This tool actually gives a score to other areas of web development, such as Acce
 
 As you are adding new JavaScript to your PWA, you might want to know about:
 
-1. Disabling the cache in your browser. By keeping the cache enabled while you are pushing new code, you will never get to see your changes. The cache mechanisms we will cover in [Part 5: Using an APEX App Offline](./doc/part5.md) makes sense for production environments.
+1. Disabling the cache in your browser. By keeping the cache enabled while you are pushing new code, you will never get to see your changes. The cache mechanisms we will cover in [Part 5: Using an APEX App Offline](./part5.md) makes sense for production environments.
   ![Chrome Disable Cache](./part2-tip2-cache.png)
 
 2. Simulating going offline to test your app without connectivity. You can also turn off your Wi-Fi.
@@ -131,18 +131,18 @@ It's safe to say that most PWA would be used on mobile devices, so it becomes in
 
 We can simulate a mobile view on Chrome developer tools:
 
-![Chrome Simulating Mobile](./part2-tip2-simulate.png)
+![Chrome Simulating Mobile](./part2-tip3-simulate.png)
 
 This is good in most cases, but it's just a simulation and I prefer activating the dev tool right from my mobile device.
 
 In Chrome, we can do this by connecting our mobile device to our computer using a USB cable, then by going to the **Remote Devices** tab of the developer tools.
 
-![Chrome Remote Debugging](./part2-tip2-remote.png)
+![Chrome Remote Debugging](./part2-tip3-remote.png)
 
 If it’s connected properly, should should your mobile device there, and it will start mirroring what you’re doing. In other words, you're browsing and testing from the mobile device, but debugging from the desktop. Best of both worlds.
 
 ---
 
-At this point, we have fully established the ground work for developing a PWA. Before diving into the PWA features, let's review some important JavaScript concepts in [Part 3: JavaScript Recap](./doc/part3.md). If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
+At this point, we have fully established the ground work for developing a PWA. Before diving into the PWA features, let's review some important JavaScript concepts in [Part 3: JavaScript Recap](./part3.md). If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./part4.md), where we will tackle the first PWA feature.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

@@ -6,18 +6,24 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing PWA](./doc/part1.md)
-* [Part 2: Setup and Development Tips](./doc/part2.md)
-* [Part 3: JavaScript Recap](./doc/part3.md)
-* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-* [Part 5: Using an APEX App Offline](./doc/part5.md)
-* [Part 6: Handling Background Sync](./doc/part6.md)
+* [Part 1: Introducing PWA](./part1.md)
+* [Part 2: Setup and Development Tips](./part2.md)
+* [Part 3: JavaScript Recap](./part3.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./part4.md)
+* [Part 5: Using an APEX App Offline](./part5.md)
+* [Part 6: Handling Background Sync](./part6.md)
 * **Part 7: Sending Push Notifications**
-* [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 8: Final Thoughts](./part8.md)
 
 ## Part 7: Table of Content
 
 * [Characteristics](#characteristics)
+* [Firebase](#firebase)
+* [Registering to Push Notifications](#registering-to-push-notifications)
+* [Sending a Push Notification](#sending-a-push-notification)
+* [Setting up the REST Endpoint](#setting-up-the-rest-endpoint)
+* [Receiving a Push Notification](#receiving-a-push-notification)
+* [Push Notification Events](#push-notification-events)
 
 ---
 
@@ -31,7 +37,7 @@ The implementation we'll cover here is part PL/SQL and part JavaScript.
 
 Preview:
 
-![Example](./preview-push.gif)
+![Example](./preview-notification.gif)
 
 Observations:
 
@@ -372,6 +378,6 @@ These events are useful for controlling getting back into the application.
 
 ---
 
-With push notifications going, we covered the last feature of our PWA guide. Here's a small piece on my [Final Thoughts](./doc/part8.md) regarding PWA in APEX.
+With push notifications going, we covered the last feature of our PWA guide. Here's a small piece on my [Final Thoughts](./part8.md) regarding PWA in APEX.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

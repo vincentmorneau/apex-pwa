@@ -1,6 +1,6 @@
 # Part 3: JavaScript Recap
 
-If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
+If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, head to [Part 4: Installing an APEX App into a Mobile Device](./part4.md), where we will tackle the first PWA feature.
 
 > This blog post series intends to cover everything there is to know about turning an APEX application into a Progressive Web App.
 >
@@ -8,14 +8,14 @@ If you're already comfortable with JavaScript _Promises_, _Async_ and _Await_, h
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
-* [Part 2: Setup and Development Tips](./doc/part2.md)
+* [Part 1: Introducing Progressive Web Apps](./part1.md)
+* [Part 2: Setup and Development Tips](./part2.md)
 * **Part 3: JavaScript Recap**
-* [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md)
-* [Part 5: Using an APEX App Offline](./doc/part5.md)
-* [Part 6: Handling Background Sync](./doc/part6.md)
-* [Part 7: Sending Push Notifications](./doc/part7.md)
-* [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 4: Installing an APEX App into a Mobile Device](./part4.md)
+* [Part 5: Using an APEX App Offline](./part5.md)
+* [Part 6: Handling Background Sync](./part6.md)
+* [Part 7: Sending Push Notifications](./part7.md)
+* [Part 8: Final Thoughts](./part8.md)
 
 ## Part 3: Table of Content
 
@@ -201,6 +201,6 @@ For more info, I wrote a [blog post](https://vmorneau.me/avoid-javascript-mess/#
 
 ---
 
-That should cover the JavaScript techniques we'll be using all over this guide. Let's head to [Part 4: Installing an APEX App into a Mobile Device](./doc/part4.md), where we will tackle the first PWA feature.
+That should cover the JavaScript techniques we'll be using all over this guide. Let's head to [Part 4: Installing an APEX App into a Mobile Device](./part4.md), where we will tackle the first PWA feature.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_

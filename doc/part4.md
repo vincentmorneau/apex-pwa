@@ -6,14 +6,14 @@
 
 ## APEX as a PWA: The Complete Guide
 
-* [Part 1: Introducing Progressive Web Apps](./doc/part1.md)
-* [Part 2: Setup and Development Tips](./doc/part2.md)
-* [Part 3: JavaScript Recap](./doc/part3.md)
+* [Part 1: Introducing Progressive Web Apps](./part1.md)
+* [Part 2: Setup and Development Tips](./part2.md)
+* [Part 3: JavaScript Recap](./part3.md)
 * **Part 4: Installing an APEX App into a Mobile Device**
-* [Part 5: Using an APEX App Offline](./doc/part5.md)
-* [Part 6: Handling Background Sync](./doc/part6.md)
-* [Part 7: Sending Push Notifications](./doc/part7.md)
-* [Part 8: Final Thoughts](./doc/part8.md)
+* [Part 5: Using an APEX App Offline](./part5.md)
+* [Part 6: Handling Background Sync](./part6.md)
+* [Part 7: Sending Push Notifications](./part7.md)
+* [Part 8: Final Thoughts](./part8.md)
 
 ## Part 4: Table of Content
 
@@ -259,6 +259,6 @@ After the app has been installed, the button will disappear.
 
 ---
 
-With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./doc/part5.md) to start learning about _Service Workers_, which are the driving force of PWA.
+With an icon on the home screen and the APEX app opening in full screen, we are now one step closer to a native mobile experience. Let's continue to [Part 5: Using an APEX App Offline](./part5.md) to start learning about _Service Workers_, which are the driving force of PWA.
 
 _Think this documentation can be enhanced? Please open a pull request and fix it!_
