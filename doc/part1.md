@@ -109,7 +109,7 @@ In the context of APEX, a notification can be sent to all users of the app, or a
 
 ![Example](./preview-notification.gif)
 
-[Part 6](./part6.md) of this guide explains how to setup and use push notifications in APEX.
+[Part 7](./part7.md) of this guide explains how to setup and use push notifications in APEX.
 
 ### Other PWA Concepts
 
