@@ -46,15 +46,27 @@ Before we do any coding, we'll have to register to Firebase which is a service f
 
 When you have [created your account on Firebase](https://firebase.google.com/), head to your console:
 
-![Firebase Console](./preview-console.png)
+![Firebase Console](./part7-firebase-console.png)
 
 From there, you can create a new project, which we will use in our APEX application later:
 
-![Firebase Projects](./preview-projects.png)
+![Firebase Projects](./part7-firebase-projects.png)
 
 ## Registering to Push Notifications
 
-TODO
+Push notifications need to be activated by the user to prevent from spamming anyone. So first, we will add a new button in the navigation bar of our application to request the permission for notifications:
+
+![Notification Button](./part7-notification-button.png)
+
+Here's the button on the navigation bar list:
+
+![Navigation Bar List](./part7-notification-button-list.png)
+
+Here's the button details:
+
+![Navigation Bar Details](./part7-notification-button-details.png)
+
+The button invokes `pwa.notification.ask();`, which we will define after we link it to Firebase. First, in `app.js` we will define a few global variables to initialize the connection to Firebase.
 
 ```javascript
 /* === #APP_IMAGES#js/app.js === */
@@ -62,13 +74,25 @@ TODO
 // Public key from Firebase
 // CHANGE THIS VALUE TO YOUR FIREBASE PUBLIC KEY
 var firebaseVapidPublicKey = 'BOFoGrYiN1P70-UMcQ9vbfCJl9x5MXfxqCBbBqOVvim_s63i9xpM9P0PwqHvfNAs2D1rKYFOlMXhD3_Rtuybl2o';
+```
+
+The `firebaseVapidPublicKey` can be found here on your Firebase account:
+
+![Firebase Public Key](./part7-firebase-public-key.png)
+
+```javascript
+/* === #APP_IMAGES#js/app.js === */
 
 // REST endpoint where we store requests for push notifications
 // CHANGE THIS VALUE TO YOUR FIREBASE DATABASE
 var firebaseNotificationEndpoint = 'https: //apex-pwa.firebaseio.com/notifications.json';
 ```
 
-TODO
+The `firebaseNotificationEndpoint` can be found here on your Firebase account (make sure to add `/notifications.json` at the end):
+
+![Firebase Database Endpoint](./part7-firebase-database.png)
+
+Then here is the `pwa.notification.ask();` code:
 
 ```javascript
 /* === #APP_IMAGES#js/app.js === */
@@ -77,23 +101,23 @@ pwa.notification = {
   /**
    * @function ask
    * @example pwa.notification.ask();
-   * Asks the permission to allow notifications
+   * Requests the permission to allow notifications
    **/
   ask: function () {
     // Request permission to subscribe to notifications
-    Notification.requestPermission(function (result) {
+    Notification.requestPermission(function (result) { // (1)
       if (result === 'granted') {
         console.log('Notification permission granted!');
 
         // Subscribe to the notification
-        apexServiceWorker.pushManager.subscribe({
+        apexServiceWorker.pushManager.subscribe({ // (2)
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(firebaseVapidPublicKey)
           })
           .then(function (notification) {
             // POST the notification subscription to Firebase
             // notification.json below could be anything
-            return fetch(firebaseNotificationEndpoint, {
+            return fetch(firebaseNotificationEndpoint, { // (3)
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -103,7 +127,7 @@ pwa.notification = {
           })
           .then(function (res) {
             if (res.ok) {
-              // Show the first notification, basically to test it...
+              // Show the first notification (4)
               apexServiceWorker.showNotification('Successfully subscribed!', {
                 body: 'You have successfully subscribed to our APEX notification service.',
                 icon: appImages + 'images/icons/icon-96x96.png',
@@ -122,38 +146,41 @@ pwa.notification = {
 };
 ```
 
-TODO
+Observations:
+
+1. This opens a confirmation windows to ask for the permission to send push notification
+2. The push notification requests gets saved in the service worker
+3. Sending the push notification request to Firebase using your public key and your database
+4. Send a first notification mentioning that the service is working properly
 
 ## Sending a Push Notification
 
-TODO
+After a user has subscribed to notification, he can finally received push notifications. In the context of an APEX application, we most likely want to send notification after a database event occurs (for example a new row inserted in a table). Here is a simple PL/SQL anonymous block that would fire the push notifications to all subscribed users:
 
 ```sql
 declare
   l_rest_return clob;
 begin
   l_rest_return := apex_web_service.make_rest_request(
-    p_url => 'https://localhost:3000/push' -- My custom REST endpoint
+    p_url => 'https://localhost:3050/push' -- My custom REST endpoint (1)
     , p_http_method => 'GET'
-    , p_parm_name => apex_util.string_to_table('title:body') -- Notification structure
-    , p_parm_value => apex_util.string_to_table('Hey you:Go back to APEX now!') -- Notification Content
+    , p_parm_name => apex_util.string_to_table('title:body') -- Notification structure (2)
+    , p_parm_value => apex_util.string_to_table('Hey you:Go back to APEX now!') -- Notification Content (3)
   );
 end;
 ```
 
-TODO
+Observations:
 
-Once the user has registered to push notification, we want to be able to SEND notifications to them.
+1. Calling a REST endpoint to communicate with Firebase. More on this later.
+2. These are the structure of the push notification. `title` and `body` are the minimum required properties.
+3. These are the values forming the push notification. These can be anything.
 
-From an Oracle development perspective, it would make a LOT of sense to invoke a push notification from PL/SQL.
-
-This screenshot shows a web service call to Firebase, which triggers a notifications to all registered users.
-
-Now extrapolate this methodology. You can use this in ANY part of your back end code. In a trigger, in a package or anywhere you want.
+If we extrapolate this methodology, we can use this in **any** part of our back end code; in a trigger, in a package or anywhere. Again, from an Oracle perspective, that becomes extremely powerful.
 
 ## Setting up the REST Endpoint
 
-TODO
+Firebase offers a few ways to communicate, but the easiest one is with Node.js. We will build the REST endpoint to communicate with Firebase, which the PL/SQL anonymous block is invoking above. The following code is provided in this GitHub repository, but there are a few values to substitute for the benefit of your own application. First we will include the dependencies:
 
 ```javascript
 /* === ~server/pushNotification.js === */
@@ -165,7 +192,7 @@ var bodyParser = require('body-parser');
 var app = express();
 ```
 
-TODO
+Then we need a global variable to reference a file for connecting to your Firebase account:
 
 ```javascript
 /* === ~server/pushNotification.js === */
@@ -175,7 +202,11 @@ TODO
 var serviceAccount = require('./firebase.json');
 ```
 
-TODO
+You can get your service account JSON file (`firebase.json`, to be renamed) in your Firebase project dashboard and store it in the `~/server/` folder from here:
+
+![Firebase Service Account](./part7-firebase-account.png)
+
+Then we want to initialize the web push library using our Firebase public and private keys:
 
 ```javascript
 /* === ~server/pushNotification.js === */
@@ -189,7 +220,13 @@ webpush.setVapidDetails(
 );
 ```
 
-TODO
+These bits of information can be found on your Firebase Cloud Messaging tab:
+
+![Firebase Project Public Key](./part7-firebase-public-key.png)
+
+![Firebase Project Private Key](./part7-firebase-private-key.png)
+
+We also want to initialize the Firebase server using our Firebase database URL:
 
 ```javascript
 /* === ~server/pushNotification.js === */
@@ -202,7 +239,11 @@ admin.initializeApp({
 });
 ```
 
-TODO
+The database URL can be found under your Firebase database tab:
+
+![Firebase Database URL](./part7-firebase-database.png)
+
+At last, here's the rest of the generic code for our push notification server:
 
 ```javascript
 /* === ~server/pushNotification.js === */
@@ -259,19 +300,21 @@ var server = app.listen(3050, function() {
 });
 ```
 
-Steps:
+Steps for running this server:
 
+* Edit `pushNotification.js` and replace with your Firebase account information where indicated
 * Open a terminal
-* Go to this directory
-* Edit server.js and replace with your Firebase account information where indicated
-* Run `npm install`
-* Run `node server.js`
+* `cd` into the `~/server/` directory
+* Execute `npm install`
+* Execute `node pushNotification.js`
 
-TODO
+Then the push notification server will be running on port 3050, which hosts the REST endpoint that we are calling in PL/SQL.
 
 ## Receiving a Push Notification
 
-TODO
+In the previous steps, we have seen how to send a push notification to all subscribed users. Now we will see how to receive a push notification and display it on the device.
+
+As explained previously, the service worker is a JavaScript file that runs code in the background, so it is the perfect candidate to listen for incoming push notifications and do something with it. Back to our service worker file, we will add a new event:
 
 ```javascript
 /* === ~/sw.js === */
@@ -287,12 +330,12 @@ self.addEventListener('push', event => {
  **/
 async function pushSW(event) {
   // Parse the notification received as a JSON object
-  notification = JSON.parse(event.data.text());
+  notification = JSON.parse(event.data.text()); // (1)
 
   // Show the notification
-  self.registration.showNotification(
-    notification.title, {
-      body: notification.body,
+  self.registration.showNotification( // (2)
+    notification.title, { // (3)
+      body: notification.body, // (4)
       icon: './images/icons/icon-192x192.png',
       badge: './images/icons/icon-192x192.png'
     }
@@ -300,16 +343,18 @@ async function pushSW(event) {
 }
 ```
 
-TODO
+Observations:
 
-So we’ve sent a notification request from SQL developer. The request has been funneled to Firebase, and now it’s being sent back to your service worker.
+1. The service worker receives an object (`event`) that contains the content of the notification and we are parsing that object as JSON
+2. The service worker is leveraging the `Notification` API to send a push notification to the user
+3. The title object comes from the PL/SQL anonymous block (see above)
+4. The body object comes from the PL/SQL anonymous block (see above)
 
-1- Here’s our service worker, receiving the notification request
-2- And then we display the notification.
+The bottom line is: we’ve sent a notification request from SQL developer to our custom REST endpoint, which funnels the request to Firebase, which broadcasts the push notification to all registered devices who are listening with their service workers.
 
 ## Push Notification Events
 
-TODO
+After we have received a notification, we might want to handle the actions that a user makes on them. The service worker allows to handle clicking on a notification and closing a notification. Here's how we would do it:
 
 ```javascript
 /* === ~/sw.js === */
@@ -323,7 +368,7 @@ self.addEventListener('notificationclose', event => {
 });
 ```
 
-These events are really useful for controlling how to get back into the application. We can also set a few actions which triggers another REST call to APEX, but that is up to you and the business logic of your application.
+These events are useful for controlling getting back into the application.
 
 ---
 
