@@ -33,5 +33,6 @@ A complete guide for turning an APEX application into a Progressive Web App.
     * [server/firebase.json](server/firebase.json)
         * Add your Firebase account export file, as instructed in [Part 7: Sending Push Notifications](./doc/part7.md)
     * [server/server.js](server/firebase.json)
-        * Replace `CHANGE_ME_1` with your vapid information from Firebase (email, public key and private key)
-        * Replace `CHANGE_ME_2` with your Firebase database URL
+        * Replace `CHANGE_ME_1` with your Firebase service account file
+        * Replace `CHANGE_ME_2` with your email, public key and private key
+        * Replace `CHANGE_ME_3` with your Firebase database URL
