@@ -109,7 +109,7 @@ I find Chrome to the best browser for developing a PWA because of its developer 
 
 Chrome's developer tools allows to audit your application and give to a score of PWA features coverage. At any point in your development, you can go to the **Audits** tab and click on **Perform an audit**
 
-![ORDS Doc Root](./part2-tip1-audit.png)
+![PWA Features Audit](./part2-tip1-audit.png)
 
 This tool actually gives a score to other areas of web development, such as Accessibility, Best Practices, SEO, and more. But right now we’ll focus on the PWA part.
 

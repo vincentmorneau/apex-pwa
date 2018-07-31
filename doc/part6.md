@@ -342,7 +342,7 @@ navigator.serviceWorker.addEventListener('message', function (event) {
 
 After the service worker has sent the message, APEX is able to refresh the report. In our example, it would finally look like this:
 
-![Pending Tasks UI](./part6-pending-ui.png)
+![Sent Tasks UI](./part6-sent-ui.png)
 
 ---
 
