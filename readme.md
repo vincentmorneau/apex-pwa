@@ -30,7 +30,7 @@ A complete guide for turning an APEX application into a Progressive Web App.
 4. Replace the following values in these files
     * [src/manifest.json](/src/manifest.json)
         * Replace the `start_url` value with your own application URL
-    * [server/server.js](server/firebase.json)
+    * [server/pushNotification.js](server/pushNotification.js)
         * Replace `CHANGE_ME_1` with your Firebase service account file
         * Replace `CHANGE_ME_2` with your email, public key and private key
         * Replace `CHANGE_ME_3` with your Firebase database URL
