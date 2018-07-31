@@ -1,4 +1,4 @@
-# APEX as a PWA
+# APEX as a PWA: The Complete Guide
 
 A complete guide for turning an APEX application into a Progressive Web App.
 
