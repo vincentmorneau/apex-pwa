@@ -17,7 +17,7 @@ var firebaseVapidPublicKey = 'BOFoGrYiN1P70-UMcQ9vbfCJl9x5MXfxqCBbBqOVvim_s63i9x
 
 // REST endpoint where we store requests for push notifications
 // CHANGE THIS VALUE
-var firebaseNotificationEndpoint = 'https: //apex-pwa.firebaseio.com/notifications.json';
+var firebaseNotificationEndpoint = 'https://apex-pwa.firebaseio.com/notifications.json';
 
 /**
  * @namespace pwa
